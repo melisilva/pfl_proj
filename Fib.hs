@@ -10,7 +10,8 @@ fibRec a | a > 0 = fibRec (a-2) + fibRec (a-1)
 --Penso que como argumento devemos dar um integer e calcular a sequência de fibonacci até esse Número
 --ex n=10-->[0,1,1,2,3,5,8,13,21,34,55]
 --if you do [0,1,1,2,3,5,8,13,21,34,55] !! 10, you get 10-->as it's asked
-fibLista :: (Integral a) => a -> [Integer]
+fibLista :: (Integral a) => a -> [a]
+fibLista a = (map fibRec[0..a])
 
 --1.3) Função de fibonacci lista infinita
 fibListaInfinita :: [Integer]
