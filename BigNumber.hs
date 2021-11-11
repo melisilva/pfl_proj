@@ -1,3 +1,5 @@
+--BigNumber podem ser positivos ou negativos
+--O que fiz até agora só tem em conta os números positivos
 --2.1) Definição de BigNumber
 type BigNumber = [Int]
 
@@ -6,7 +8,6 @@ type BigNumber = [Int]
 --Centro e trinta == [1,3,0]
 
 --2.3) Função output-->folha 1 1.16 but with lists
-
 converte :: Int -> String
 cv1 :: Int -> Int -> String
 cv2 :: Int -> String
