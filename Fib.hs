@@ -11,11 +11,17 @@ fibRec a | a > 0 = fibRec (a-2) + fibRec (a-1)
 --ex n=10-->[0,1,1,2,3,5,8,13,21,34,55]
 --if you do [0,1,1,2,3,5,8,13,21,34,55] !! 10, you get 10-->as it's asked
 --fibLista :: (Integral a)=>a->[Integer]
-fib_mem :: Int -> Integer
-fib_mem = (map fib [0..] !!)
+
+fibLista :: (Integral a) => a -> a
+fibLista = (map fib [0..] !!)
   where fib 0 = 0
         fib 1 = 1
-        fib n = fib_mem (n-2) + fib_mem (n-1)
+        fib n = fibLista (n-2) + fibLista (n-1)
+
+fibLista2 :: (Integral a) => a -> a
+fibLista2 n = lista !! n
+  where lista = 0 : 1 : map foo [2..]
+        foo n = lista !! (-1) + lista !! (-2)
 
 --fibLista has to be something like this but return a list instead of an integer
 --this uses memoization which is a dynamic programming techique
