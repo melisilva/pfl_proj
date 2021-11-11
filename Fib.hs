@@ -13,7 +13,7 @@ fibRec a | a > 0 = fibRec (a-2) + fibRec (a-1)
 --fibLista :: (Integral a)=>a->[Integer]
 fib_mem :: Int -> Integer
 fib_mem = (map fib [0..] !!)
-  where fib 0 = 1
+  where fib 0 = 0
         fib 1 = 1
         fib n = fib_mem (n-2) + fib_mem (n-1)
 
