@@ -9,7 +9,8 @@ fibRec a | a > 0 = fibRec (a-2) + fibRec (a-1)
 --1.2) Função de fibonacci programação dinâmica
 fibLista :: (Integral a) => a -> a
 
-
-
 --1.3) Função de fibonacci lista infinita
-fibListaInfinita :: (Integral a) => a -> a
+fibListaInfinita :: [Integer]
+fibListaInfinita = 0 : 1 : [a+b | (a,b)<- zip fibListaInfinita (tail fibListaInfinita)]
+fibListaInfinita = 0 : 1 : zipWith (+) fibListaInfinita (tail fibListaInfinita)
+fibListaInfinita = 0 : 1 : [ a | b <-[2..], let a = ((fibListaInfinita !! (b-1)) + (fibListaInfinita !! (b-2)))]
