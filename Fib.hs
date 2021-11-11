@@ -7,7 +7,7 @@ fibRec a | a > 0 = fibRec (a-2) + fibRec (a-1)
          | otherwise = error "Número negativo" --professor disse para não usar error, devemos usar o quê então?
 
 --1.2) Função de fibonacci programação dinâmica
-fibLista :: (Integral a) => a -> a
+fibLista :: [Integer]
 
 --1.3) Função de fibonacci lista infinita
 fibListaInfinita :: [Integer]
