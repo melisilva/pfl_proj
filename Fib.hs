@@ -10,11 +10,19 @@ fibRec a | a > 0 = fibRec (a-2) + fibRec (a-1)
 --Penso que como argumento devemos dar um integer e calcular a sequência de fibonacci até esse Número
 --ex n=10-->[0,1,1,2,3,5,8,13,21,34,55]
 --if you do [0,1,1,2,3,5,8,13,21,34,55] !! 10, you get 10-->as it's asked
-fibLista :: (Integral a) => a -> [a]
-fibLista a = (map fibRec[0..a])
+--fibLista :: (Integral a)=>a->[Integer]
+fib_mem :: Int -> Integer
+fib_mem = (map fib [0..] !!)
+  where fib 0 = 1
+        fib 1 = 1
+        fib n = fib_mem (n-2) + fib_mem (n-1)
+
+--fibLista has to be something like this but return a list instead of an integer
+--this uses memoization which is a dynamic programming techique
 
 --1.3) Função de fibonacci lista infinita
 fibListaInfinita :: [Integer]
 fibListaInfinita = 0 : 1 : [a+b | (a,b)<- zip fibListaInfinita (tail fibListaInfinita)]
-fibListaInfinita = 0 : 1 : zipWith (+) fibListaInfinita (tail fibListaInfinita)
-fibListaInfinita = 0 : 1 : [ a | b <-[2..], let a = ((fibListaInfinita !! (b-1)) + (fibListaInfinita !! (b-2)))]
+--fibListaInfinita = 0 : 1 : zipWith (+) fibListaInfinita (tail fibListaInfinita)
+--fibListaInfinita = 0 : 1 : [ a | b <-[2..], let a = ((fibListaInfinita !! (b-1)) + (fibListaInfinita !! (b-2)))]
+--fibListaInfinita = 0 : scanl(+) 1 fibListaInfinita
