@@ -22,7 +22,7 @@ output :: BigNumber->String
 
 output xs = converte(fromDigits xs)
 
-fromDigits xs = sum (zipWith (*) (reverse xs) (iterate (*10) 1))
+fromDigits xs = if head(xs) < 0 then (-1)*(foldr(-)0 (zipWith (*) (reverse xs) (iterate (*10) 1))) else sum (zipWith (*) (reverse xs) (iterate (*10) 1))
 
 converte x | x < 0 || x > 999999 = "invalido"
            | otherwise = cv1 mil cent ++ cv2 cent
