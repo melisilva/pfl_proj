@@ -127,14 +127,23 @@ utilSub l
         y = head (drop 1 l)
         xs = drop 2 l
 
--- utilMul 0 [1, 0, 0] [3, 1]
+processProduct :: BigNumber -> BigNumber
+processProduct [] = []
+processProduct l
+      | abs x > 10 && length l == 1                   = (mod x 10) : [div x 10]
+      | abs x < 10 && length l == 1                   = [x]
+      | abs x > 10 && length l /= 1                   = (mod x 10) : processProduct (y + (quot x 10):xs)  
+      | abs x < 10 && length l /= 1                   = x : processProduct (y:xs)
+  where x = head l
+        y = head (drop 1 l)
+        xs = drop 2 l
 
 utilMul :: Int -> BigNumber -> BigNumber -> BigNumber
 utilMul i a b
       | length b > 1           = somaBN currentProduct (utilMul (i + 1) a next)
       | length b == 1          = somaBN currentProduct [0]
       | otherwise              = []
-  where currentProduct = utilPadR i (map (*x) a) 
+  where currentProduct = reverse (processProduct (reverse (utilPadR i (map (*x) a))))
         x = last b
         next = init b
 
