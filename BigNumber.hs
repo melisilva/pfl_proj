@@ -82,4 +82,3 @@ dezenas x = ["dez", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "set
 unidades x = ["um", "dois", "tres", "quatro", "cinco", "seis", "sete", "oito", "nove"]!!(x-1)
 
 offsets x = ["onze", "doze", "treze", "catorze", "quinze", "dezasseis", "dezassete", "dezoito", "dezanove"]!!(x-1)
-
