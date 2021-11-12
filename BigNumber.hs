@@ -112,8 +112,8 @@ somaBN a b
       | head a < 0 && head b < 0    = ((head sumNeg)*(-1):tail sumNeg)
       | otherwise                   = reverse (utilSoma l)
   where l = zipWith (+) ra rb
-        ra = reverse (utilNegative (utilPad len a))
-        rb = reverse (utilNegative (utilPad len b))
+        ra = reverse (utilPad len a)
+        rb = reverse (utilPad len b)
         len = max (length a) (length b)
         sumNeg = somaBN ((head a)*(-1):tail a) ((head b)*(-1):tail b)
 
