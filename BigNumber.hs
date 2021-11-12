@@ -95,10 +95,10 @@ utilPad n xs = replicate (n - length xs) 0 ++ xs
 
 utilUnpad :: BigNumber -> BigNumber
 utilUnpad (x:xs)
-      | x == 0    = utilUnpad (drop 1 (x:xs))
+      | x == 0 && length (x:xs) /= 1   = utilUnpad (drop 1 (x:xs))
       | otherwise = (x:xs)
 
-utilUnPad' xs = if (length xs /= 1 && head(xs) == 0) then utilUnPad(drop 1 xs) else xs
+utilUnPad' xs = if (length xs /= 1 && head(xs) == 0) then utilUnPad'(drop 1 xs) else xs
 
 utilSoma :: BigNumber -> BigNumber
 utilSoma [] = []
