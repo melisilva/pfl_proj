@@ -19,10 +19,13 @@ unidades :: Int -> String
 offsets :: Int -> String
 fromDigits :: BigNumber->Int
 output :: BigNumber->String
+conv :: [BigNumber]->[Int]
+
+conv xs = ((-1)*head(xs)): drop 1 xs
 
 output xs = converte(fromDigits xs)
 
-fromDigits xs = if head(xs) < 0 then (-1)*(foldr(-)0 (zipWith (*) (reverse xs) (iterate (*10) 1))) else sum (zipWith (*) (reverse xs) (iterate (*10) 1))
+fromDigits xs = if head(xs) < 0 then (-1)*(sum (zipWith (*) (reverse (conv xs)) (iterate (*10) 1))) else sum (zipWith (*) (reverse xs) (iterate (*10) 1))
 
 converte x | x < 0 || x > 999999 = "invalido"
            | otherwise = cv1 mil cent ++ cv2 cent
