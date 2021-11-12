@@ -87,6 +87,6 @@ offsets x = ["onze", "doze", "treze", "catorze", "quinze", "dezasseis", "dezasse
 somaBN:: BigNumber->BigNumber->BigNumber
 algarismos :: Int -> BigNumber
 algarismos 0 = []
-algarismos n = algarismos (div n 10) ++ [mod n 10]
---Let's do positive numbers first
+algarismos n = if n<0 then conv(algarismos(div (n*(-1)) 10) ++ [mod (n*(-1)) 10]) else algarismos (div n 10) ++ [mod n 10]
+
 somaBN a b = algarismos(fromDigits(a)+fromDigits(b))
