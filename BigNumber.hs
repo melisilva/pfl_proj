@@ -15,7 +15,9 @@ utilClean str = [ new !! x | x<-[0..(length new - 1)], mod x 2 == 0]
 
 --Centro e trinta == [1,3,0]
 
---2.3) Função output-->folha 1 1.16 but with lists
+--2.3) Função output
+--This exercise was done using 1.16 as a basis
+--It accepts negative and positive numbers lower than 1 million (like 1.16)
 converte :: Int -> String
 cv1 :: Int -> Int -> String
 cv2 :: Int -> String
@@ -80,3 +82,8 @@ dezenas x = ["dez", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "set
 unidades x = ["um", "dois", "tres", "quatro", "cinco", "seis", "sete", "oito", "nove"]!!(x-1)
 
 offsets x = ["onze", "doze", "treze", "catorze", "quinze", "dezasseis", "dezassete", "dezoito", "dezanove"]!!(x-1)
+
+--2.4) Função somaBN
+somaBN:: BigNumber->BigNumber->Int
+--Let's do positive numbers first
+somaBN a b = fromDigits(a)+fromDigits(b) --need to make a function to turn int into BigNumber
