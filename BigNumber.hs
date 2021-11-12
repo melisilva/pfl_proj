@@ -132,7 +132,7 @@ utilSub l
 utilMul :: Int -> BigNumber -> BigNumber -> BigNumber
 utilMul i a b
       | length b > 1           = somaBN currentProduct (utilMul (i + 1) a next)
-      | length b == 1          = currentProduct 
+      | length b == 1          = somaBN currentProduct [0]
       | otherwise              = []
   where currentProduct = utilPadR i (map (*x) a) 
         x = last b
