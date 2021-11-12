@@ -90,6 +90,9 @@ utilNegative a
       | otherwise   = a
   where len = length a - 1
 
+utilPad :: Int -> [Int] -> [Int]
+utilPad n xs = replicate (n - length xs) 0 ++ xs
+
 utilSoma :: [Int] -> [Int]
 utilSoma [] = []
 utilSoma l
@@ -103,7 +106,16 @@ utilSoma l
 
 -- 2.4 ) somaBN
 somaBN :: BigNumber -> BigNumber -> BigNumber
-somaBN a b = reverse (utilSoma l)
+somaBN a b
+      | head a < 0 && head b > 0    = subBN b ((head a)*(-1):tail a)
+      | head a > 0 && head b < 0    = subBN a ((head b)*(-1):tail b)
+      | head a < 0 && head b < 0    = ((head sumNeg)*(-1):tail sumNeg)
+      | otherwise                   = reverse (utilSoma l)
   where l = zipWith (+) ra rb
-        ra = reverse (utilNegative a)
-        rb = reverse (utilNegative b)
+        ra = reverse (utilNegative (utilPad len a))
+        rb = reverse (utilNegative (utilPad len b))
+        len = max (length a) (length b)
+        sumNeg = somaBN ((head a)*(-1):tail a) ((head b)*(-1):tail b)
+
+subBN :: BigNumber -> BigNumber -> BigNumber
+subBN a b = a ++ b
