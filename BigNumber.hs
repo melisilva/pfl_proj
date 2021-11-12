@@ -93,6 +93,9 @@ utilNegative a
 utilPad :: Int -> BigNumber -> BigNumber
 utilPad n xs = replicate (n - length xs) 0 ++ xs
 
+utilPadR :: Int -> BigNumber -> BigNumber
+utilPadR n xs = xs ++ replicate n 0
+
 utilUnpad :: BigNumber -> BigNumber
 utilUnpad (x:xs)
       | x == 0 && length (x:xs) /= 1   = utilUnpad (drop 1 (x:xs))
@@ -114,15 +117,26 @@ utilSoma l
 utilSub :: BigNumber -> BigNumber
 utilSub [] = []
 utilSub l
-      | x < 0 && length l /= 1                    = mod x 10 : utilSub (y - 1:xs)
-      | x < 0 && length l == 1                    = mod x 10 : [quot x 10]    
-      | x >= 10 && length l /= 1                  = mod x 10 : utilSub (y - 1:xs)
-      | x >= 10 && length l == 1                  = mod x 10 : [quot x 10]
+      | x < 0 && length l /= 1                     = mod x 10 : utilSub (y - 1:xs)
+      | x < 0 && length l == 1                     = mod x 10 : [quot x 10]    
+      | x >= 10 && length l /= 1                   = mod x 10 : utilSub (y - 1:xs)
+      | x >= 10 && length l == 1                   = mod x 10 : [quot x 10]
       | x >= 0 && x < 10 && length l /= 1          = x : utilSub (y:xs)
       | x >= 0 && x < 10 && length l == 1          = [x]
   where x = head l
         y = head (drop 1 l)
         xs = drop 2 l
+
+-- utilMul 0 [1, 0, 0] [3, 1]
+
+utilMul :: Int -> BigNumber -> BigNumber -> BigNumber
+utilMul i a b
+      | length b > 1           = somaBN currentProduct (utilMul (i + 1) a next)
+      | length b == 1          = currentProduct 
+      | otherwise              = []
+  where currentProduct = utilPadR i (map (*x) a) 
+        x = last b
+        next = init b
 
 -- 2.4 ) somaBN
 somaBN :: BigNumber -> BigNumber -> BigNumber
@@ -136,7 +150,6 @@ somaBN a b
         rb = reverse (utilPad len b)
         len = max (length a) (length b)
         sumNeg = somaBN ((head a)*(-1):tail a) ((head b)*(-1):tail b)
-
 
 -- 2.5 ) subBN
 subBN :: BigNumber -> BigNumber -> BigNumber
@@ -154,3 +167,14 @@ subBN a b
         len = max (length a) (length b)
         somaNeg = somaBN ((head a)*(-1):tail a) b
         subNewOrder = subBN b a
+
+-- 2.6) mulBN
+mulBN :: BigNumber -> BigNumber -> BigNumber
+mulBN a b 
+      | head a < 0 && head b > 0    = head aNbP : map (*(-1)) (tail aNbP)
+      | head a > 0 && head b < 0    = head aNbP : map (*(-1)) (tail aPbN)
+      | head a < 0 && head b < 0    = utilMul 0 (utilNegative a) (utilNegative b)
+      | otherwise                   = utilMul 0 a b
+  where aNbP = (utilMul 0 (utilNegative a) b)
+        aPbN = utilMul 0 a (utilNegative b)
+        
