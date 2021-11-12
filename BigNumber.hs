@@ -85,18 +85,21 @@ offsets x = ["onze", "doze", "treze", "catorze", "quinze", "dezasseis", "dezasse
 
 --2.4) Função somaBN
 somaBN:: BigNumber->BigNumber->BigNumber
+delZero::BigNumber->BigNumber
+delZero n = if (head(n)==0 && length(n)/=1) then drop 1 n else n
+
 algarismos :: Int -> BigNumber
-algarismos 0 = []
+algarismos 0 = [0]
 algarismos n = if n<0 then conv(algarismos(div (n*(-1)) 10) ++ [mod (n*(-1)) 10]) else algarismos (div n 10) ++ [mod n 10]
 
-somaBN a b = algarismos(fromDigits(a)+fromDigits(b))
+somaBN a b = delZero(algarismos(fromDigits(a)+fromDigits(b)))
 
 --2.5) Função subBN
 subBN:: BigNumber->BigNumber->BigNumber
 
-subBN a b = algarismos(fromDigits(a)-fromDigits(b))
+subBN a b = delZero(algarismos(fromDigits(a)-fromDigits(b)))
 
 --2.6) Função mulBN
 mulBN:: BigNumber->BigNumber->BigNumber
 
-mulBN a b = algarismos(fromDigits(a)*fromDigits(b))
+mulBN a b = delZero(algarismos(fromDigits(a)*fromDigits(b)))
