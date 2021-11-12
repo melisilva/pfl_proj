@@ -84,21 +84,23 @@ unidades x = ["um", "dois", "tres", "quatro", "cinco", "seis", "sete", "oito", "
 offsets x = ["onze", "doze", "treze", "catorze", "quinze", "dezasseis", "dezassete", "dezoito", "dezanove"]!!(x-1)
 
 -- Funções úteis para as operações
-utilNegative :: [Int] -> [Int]
+utilNegative :: BigNumber -> BigNumber
 utilNegative a
       | head a < 0  = head a : [ (a !! x)*(-1) | x<-[1..len]]
       | otherwise   = a
   where len = length a - 1
 
-utilPad :: Int -> [Int] -> [Int]
+utilPad :: Int -> BigNumber -> BigNumber
 utilPad n xs = replicate (n - length xs) 0 ++ xs
 
-utilUnpad :: [Int] -> [Int]
+utilUnpad :: BigNumber -> BigNumber
 utilUnpad (x:xs)
       | x == 0    = utilUnpad (drop 1 (x:xs))
       | otherwise = (x:xs)
 
-utilSoma :: [Int] -> [Int]
+utilUnPad' xs = if (length xs /= 1 && head(xs) == 0) then utilUnPad(drop 1 xs) else xs
+
+utilSoma :: BigNumber -> BigNumber
 utilSoma [] = []
 utilSoma l
       | x >= 10 && length l /= 1           = mod x 10 : utilSoma (y+1:xs)
@@ -109,7 +111,7 @@ utilSoma l
         y = head (drop 1 l)
         xs = drop 2 l
 
-utilSub :: [Int] -> [Int]
+utilSub :: BigNumber -> BigNumber
 utilSub [] = []
 utilSub l
       | x < 0 && length l /= 1           = mod x 10 : utilSub (y+1:xs)
@@ -117,7 +119,7 @@ utilSub l
       | x >= 10 && length l /= 1         = mod x 10 : utilSub (y+1:xs)
       | x >= 10 && length l == 1         = mod x 10 : [quot x 10]
       | x < 10 && length l /= 1          = x : utilSub (y:xs)
-      | x < 10 && length l == 1          = [x] 
+      | x < 10 && length l == 1          = [x]
   where x = head l
         y = head (drop 1 l)
         xs = drop 2 l
