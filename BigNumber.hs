@@ -90,3 +90,13 @@ algarismos 0 = []
 algarismos n = if n<0 then conv(algarismos(div (n*(-1)) 10) ++ [mod (n*(-1)) 10]) else algarismos (div n 10) ++ [mod n 10]
 
 somaBN a b = algarismos(fromDigits(a)+fromDigits(b))
+
+--2.5) Função subBN
+subBN:: BigNumber->BigNumber->BigNumber
+
+subBN a b = algarismos(fromDigits(a)-fromDigits(b))
+
+--2.6) Função mulBN
+mulBN:: BigNumber->BigNumber->BigNumber
+
+mulBN a b = algarismos(fromDigits(a)*fromDigits(b))
