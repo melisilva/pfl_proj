@@ -84,6 +84,9 @@ unidades x = ["um", "dois", "tres", "quatro", "cinco", "seis", "sete", "oito", "
 offsets x = ["onze", "doze", "treze", "catorze", "quinze", "dezasseis", "dezassete", "dezoito", "dezanove"]!!(x-1)
 
 --2.4) Função somaBN
-somaBN:: BigNumber->BigNumber->Int
+somaBN:: BigNumber->BigNumber->BigNumber
+algarismos :: Int -> BigNumber
+algarismos 0 = []
+algarismos n = algarismos (div n 10) ++ [mod n 10]
 --Let's do positive numbers first
-somaBN a b = fromDigits(a)+fromDigits(b) --need to make a function to turn int into BigNumber
+somaBN a b = algarismos(fromDigits(a)+fromDigits(b))
