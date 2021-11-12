@@ -83,23 +83,28 @@ unidades x = ["um", "dois", "tres", "quatro", "cinco", "seis", "sete", "oito", "
 
 offsets x = ["onze", "doze", "treze", "catorze", "quinze", "dezasseis", "dezassete", "dezoito", "dezanove"]!!(x-1)
 
---2.4) Função somaBN
-somaBN:: BigNumber->BigNumber->BigNumber
-delZero::BigNumber->BigNumber
-delZero n = if (head(n)==0 && length(n)/=1) then drop 1 n else n
-
+-- Funções úteis para operações.
 algarismos :: Int -> BigNumber
 algarismos 0 = [0]
 algarismos n = if n<0 then conv(algarismos(div (n*(-1)) 10) ++ [mod (n*(-1)) 10]) else algarismos (div n 10) ++ [mod n 10]
 
+delZero :: BigNumber -> BigNumber
+delZero n = if (head(n)==0 && length(n)/=1) then drop 1 n else n
+
+--2.4) Função somaBN
+somaBN :: BigNumber -> BigNumber -> BigNumber
 somaBN a b = delZero(algarismos(fromDigits(a)+fromDigits(b)))
 
 --2.5) Função subBN
-subBN:: BigNumber->BigNumber->BigNumber
-
+subBN :: BigNumber -> BigNumber -> BigNumber
 subBN a b = delZero(algarismos(fromDigits(a)-fromDigits(b)))
 
 --2.6) Função mulBN
-mulBN:: BigNumber->BigNumber->BigNumber
-
+mulBN :: BigNumber -> BigNumber -> BigNumber
 mulBN a b = delZero(algarismos(fromDigits(a)*fromDigits(b)))
+
+-- 2.7) Função divBN
+divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
+divBN a b = (delZero(algarismos x), delZero(algarismos y))
+      where x = div (fromDigits a) (fromDigits b)
+            y = mod (fromDigits a) (fromDigits b)
