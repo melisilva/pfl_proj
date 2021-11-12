@@ -1,10 +1,18 @@
+import Data.String
+
 --BigNumber podem ser positivos ou negativos
 --O que fiz até agora só tem em conta os números positivos
 --2.1) Definição de BigNumber
 type BigNumber = [Int]
 
 --2.2) Função scanner--->folha 1 1.16 reverse
---scanner :: String->BigNumber
+utilClean :: String -> [String]
+utilClean str = [ new !! x | x<-[0..(length new - 1)], mod x 2 == 0]
+      where new = words str
+
+-- scanner :: String -> BigNumber
+-- where l = utilClean str
+
 --Centro e trinta == [1,3,0]
 
 --2.3) Função output-->folha 1 1.16 but with lists
