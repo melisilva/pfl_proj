@@ -83,9 +83,13 @@ unidades x = ["um", "dois", "tres", "quatro", "cinco", "seis", "sete", "oito", "
 
 offsets x = ["onze", "doze", "treze", "catorze", "quinze", "dezasseis", "dezassete", "dezoito", "dezanove"]!!(x-1)
 
+-- Funções úteis para as operações
+utilNegative :: [Int] -> [Int]
+utilNegative a
+      | head a < 0  = head a : [ (a !! x)*(-1) | x<-[1..len]]
+      | otherwise   = a
+  where len = length a - 1
 
--- 2.4 ) somaBN
-somaBN :: BigNumber -> BigNumber -> BigNumber
 utilSoma :: [Int] -> [Int]
 utilSoma [] = []
 utilSoma l
@@ -97,11 +101,9 @@ utilSoma l
         y = head (drop 1 l)
         xs = drop 2 l
 
---[1,2][4,9]-->[11,5]
---Entra na primeira condição--->mod 11 10 : utilsoma(5+1:[])--->1:utilsoma([6])
---utilsoma[6] entra na última condição-->6: utilSoma ()
-
-somaBN a b = reverse(utilSoma l)
+-- 2.4 ) somaBN
+somaBN :: BigNumber -> BigNumber -> BigNumber
+somaBN a b = reverse (utilSoma l)
   where l = zipWith (+) ra rb
-        ra = reverse a
-        rb = reverse b
+        ra = reverse (utilNegative a)
+        rb = reverse (utilNegative b)
