@@ -89,9 +89,10 @@ somaBN :: BigNumber -> BigNumber -> BigNumber
 utilSoma :: [Int] -> [Int]
 utilSoma [] = []
 utilSoma l
-      | x > 10 && length l /= 1           = mod x 10 : utilSoma (y+1:xs)
-      | x > 10 && length l == 1           = mod x 10 : [quot x 10]
-      | otherwise                         = [x]
+      | x >= 10 && length l /= 1           = mod x 10 : utilSoma (y+1:xs)
+      | x >= 10 && length l == 1           = mod x 10 : [quot x 10]
+      | x < 10 && length l /= 1            = x : utilSoma (y:xs)
+      | x < 10 && length l == 1            = [x]
   where x = head l
         y = head (drop 1 l)
         xs = drop 2 l
