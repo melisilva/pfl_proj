@@ -27,7 +27,10 @@ unidades :: Int -> String
 offsets :: Int -> String
 fromDigits :: BigNumber->Int
 output :: BigNumber->String
-conv :: [BigNumber]->[Int]
+conv :: BigNumber->BigNumber
+convInt ::Int->Int
+
+convInt x = (-1)*x
 
 conv xs = ((-1)*head(xs)): drop 1 xs
 
@@ -35,10 +38,12 @@ output xs = converte(fromDigits xs)
 
 fromDigits xs = if head(xs) < 0 then (-1)*(sum (zipWith (*) (reverse (conv xs)) (iterate (*10) 1))) else sum (zipWith (*) (reverse xs) (iterate (*10) 1))
 
-converte x | x < 0 || x > 999999 = "invalido"
+converte x | x < 0 = "menos " ++ cv1 millie centie ++ cv2 centie
            | otherwise = cv1 mil cent ++ cv2 cent
            where mil = x `div` 1000
                  cent = x `mod` 1000
+                 millie = (convInt x)`div`1000
+                 centie = (convInt x)`mod`1000
 
 cv1 x y | x == 0 = ""
         | x == 1 && (c == 0 || d2 == 0) = "mil e "
