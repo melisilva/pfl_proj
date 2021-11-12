@@ -114,12 +114,12 @@ utilSoma l
 utilSub :: BigNumber -> BigNumber
 utilSub [] = []
 utilSub l
-      | x < 0 && length l /= 1           = mod x 10 : utilSub (y+1:xs)
-      | x < 0 && length l == 1           = mod x 10 : [quot x 10]
-      | x >= 10 && length l /= 1         = mod x 10 : utilSub (y+1:xs)
-      | x >= 10 && length l == 1         = mod x 10 : [quot x 10]
-      | x >= 0 && x < 10 && length l /= 1          = x : utilSub (y:xs)
-      | x >= 0 && x < 10 && length l == 1          = [x]
+      | x <= 0 && length l /= 1                   = mod x 10 : utilSub (y - 1:xs)
+      | x <= 0 && length l == 1                   = mod x 10 : [quot x 10]
+      | x >= 10 && length l /= 1                  = mod x 10 : utilSub (y - 1:xs)
+      | x >= 10 && length l == 1                  = mod x 10 : [quot x 10]
+      | x > 0 && x < 10 && length l /= 1          = x : utilSub (y:xs)
+      | x > 0 && x < 10 && length l == 1          = [x]
   where x = head l
         y = head (drop 1 l)
         xs = drop 2 l
@@ -141,12 +141,14 @@ somaBN a b
 -- 2.5 ) subBN
 subBN :: BigNumber -> BigNumber -> BigNumber
 subBN a b
+      | head a < head b            = ((head subNewOrder)*(-1):tail subNewOrder)
       | head a > 0 && head b < 0   = somaBN a ((head b)*(-1):tail b)
       | head a < 0 && head b < 0   = subBN ((head b)*(-1):tail b) ((head a)*(-1):tail a)
       | head a < 0 && head b > 0   = ((head somaNeg)*(-1):tail somaNeg)
-      | otherwise                  = utilUnpad (reverse (utilSub l))
+      | head a > 0 && head b > 0   = utilUnpad (reverse (utilSub l))
   where l = zipWith (-) ra rb
         ra = reverse (utilPad len a)
         rb = reverse (utilPad len b)
         len = max (length a) (length b)
         somaNeg = somaBN ((head a)*(-1):tail a) b
+        subNewOrder = subBN b a
