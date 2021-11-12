@@ -27,10 +27,10 @@ centenas :: Int -> String
 dezenas :: Int -> String
 unidades :: Int -> String
 offsets :: Int -> String
-fromDigits :: BigNumber->Int
-output :: BigNumber->String
-conv :: BigNumber->BigNumber
-convInt ::Int->Int
+fromDigits :: BigNumber -> Int
+output :: BigNumber -> String
+conv :: BigNumber -> BigNumber
+convInt :: Int -> Int
 
 convInt x = (-1)*x
 
@@ -82,3 +82,21 @@ dezenas x = ["dez", "vinte", "trinta", "quarenta", "cinquenta", "sessenta", "set
 unidades x = ["um", "dois", "tres", "quatro", "cinco", "seis", "sete", "oito", "nove"]!!(x-1)
 
 offsets x = ["onze", "doze", "treze", "catorze", "quinze", "dezasseis", "dezassete", "dezoito", "dezanove"]!!(x-1)
+
+
+-- 2.4 ) somaBN
+utilSoma :: [Int] -> [Int]
+utilSoma [] = []
+utilSoma l
+      | x > 10 && length l /= 1           = mod x 10 : utilSoma (y+1:xs)
+      | x > 10 && length l == 1           = mod x 10 : [quot x 10]
+      | otherwise                         = x : utilSoma (y:xs)
+  where x = head l
+        y = head (drop 1 l)
+        xs = drop 2 l
+
+
+somaBN a b = utilSoma l
+  where l = zipWith (+) ra rb
+        ra = reverse a
+        rb = reverse b
