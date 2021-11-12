@@ -99,3 +99,9 @@ subBN a b = algarismos(fromDigits(a)-fromDigits(b))
 --2.6) Função mulBN
 mulBN :: BigNumber -> BigNumber -> BigNumber
 mulBN a b = algarismos(fromDigits(a)*fromDigits(b))
+
+-- 2.7) Função divBN
+divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
+divBN a b = (algarismos x, algarismos y)
+      where x = div (fromDigits a) (fromDigits b)
+            y = mod (fromDigits a) (fromDigits b)
