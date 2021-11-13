@@ -1,9 +1,16 @@
 import Data.String
-
 --BigNumber podem ser positivos ou negativos
 --O que fiz até agora só tem em conta os números positivos
 --2.1) Definição de BigNumber
 type BigNumber = [Int]
+
+
+less :: BigNumber -> BigNumber -> Bool
+less a b
+      | (head a) == (head b)      = (<) (tail a) (tail b)
+      | (head a) < (head b)       = True
+      | (head a) > (head b)       = False 
+
 
 --2.2) Função scanner--->folha 1 1.16 reverse
 utilClean :: String -> [String]
@@ -86,7 +93,7 @@ offsets x = ["onze", "doze", "treze", "catorze", "quinze", "dezasseis", "dezasse
 -- Funções úteis para as operações
 utilNegative :: BigNumber -> BigNumber
 utilNegative a
-      | head a < 0                  = head a : [ (a !! x)*(-1) | x<-[1..len]]
+      | (head a) < 0                  = (head a) : [ (a !! x)*(-1) | x<-[1..len]]
       | otherwise                   = a
   where len = length a - 1
 
@@ -102,6 +109,13 @@ utilUnpad (x:xs)
       | otherwise = (x:xs)
 
 utilUnPad' xs = if (length xs /= 1 && head(xs) == 0) then utilUnPad'(drop 1 xs) else xs
+
+toDigits :: Int -> BigNumber
+toDigits 0 = [0]
+toDigits n = if n<0 then conv(toDigits(div (n*(-1)) 10) ++ [mod (n*(-1)) 10]) else toDigits (div n 10) ++ [mod n 10]
+
+delZero :: BigNumber -> BigNumber
+delZero n = if (head(n)==0 && length(n)/=1) then drop 1 n else n
 
 utilSoma :: BigNumber -> BigNumber
 utilSoma [] = []
@@ -158,40 +172,72 @@ utilMul i a b
 -- 2.4 ) somaBN
 somaBN :: BigNumber -> BigNumber -> BigNumber
 somaBN a b
-      | head a < 0 && head b > 0    = subBN b ((head a)*(-1):tail a)
-      | head a > 0 && head b < 0    = subBN a ((head b)*(-1):tail b)
-      | head a < 0 && head b < 0    = ((head sumNeg)*(-1):tail sumNeg)
+      | (head a) < 0 && (head b) > 0    = subBN b (((head a))*(-1):tail a)
+      | (head a) > 0 && (head b) < 0    = subBN a (((head b))*(-1):tail b)
+      | (head a) < 0 && (head b) < 0    = ((head sumNeg)*(-1):tail sumNeg)
       | otherwise                   = reverse (utilSoma l)
   where l = zipWith (+) ra rb
         ra = reverse (utilPad len a)
         rb = reverse (utilPad len b)
         len = max (length a) (length b)
-        sumNeg = somaBN ((head a)*(-1):tail a) ((head b)*(-1):tail b)
+        sumNeg = somaBN (((head a))*(-1):tail a) (((head b))*(-1):tail b)
 
 -- 2.5 ) subBN
 subBN :: BigNumber -> BigNumber -> BigNumber
 subBN a b
-      | head a < head b && last a == 0 && head b == 0     = somaBN a ((head b)*(-1):tail b)
-      | (head a < head b && head a < 0 && head b > 0)     = somaBN a ((head b)*(-1):tail b)
-      | head a < head b && head a > 0 && head b > 0       = ((head subNewOrder)*(-1):tail subNewOrder)
-      | head a > 0 && head b < 0                          = somaBN a ((head b)*(-1):tail b)
-      | head a < 0 && head b < 0                          = subBN ((head b)*(-1):tail b) ((head a)*(-1):tail a)
-      | head a < 0 && head b > 0                          = ((head somaNeg)*(-1):tail somaNeg)
-      | head a > 0 && head b > 0                          = utilUnpad (reverse (utilSub l))
+      | (head a) < (head b) && last a == 0 && (head b) == 0     = somaBN a (((head b))*(-1):tail b)
+      | ((head a) < (head b) && (head a) < 0 && (head b) > 0)     = somaBN a (((head b))*(-1):tail b)
+      | (head a) < (head b) && (head a) > 0 && (head b) > 0       = ((head subNewOrder)*(-1):tail subNewOrder)
+      | (head a) > 0 && (head b) < 0                          = somaBN a (((head b))*(-1):tail b)
+      | (head a) < 0 && (head b) < 0                          = subBN (((head b))*(-1):tail b) (((head a))*(-1):tail a)
+      | (head a) < 0 && (head b) > 0                          = ((head somaNeg)*(-1):tail somaNeg)
+      | (head a) > 0 && (head b) > 0                          = utilUnpad (reverse (utilSub l))
   where l = zipWith (-) ra rb
         ra = reverse (utilPad len a)
         rb = reverse (utilPad len b)
         len = max (length a) (length b)
-        somaNeg = somaBN ((head a)*(-1):tail a) b
+        somaNeg = somaBN (((head a))*(-1):tail a) b
         subNewOrder = subBN b a
 
 -- 2.6) mulBN
 mulBN :: BigNumber -> BigNumber -> BigNumber
 mulBN a b 
-      | head a < 0 && head b > 0    = utilSig (head aNbP : map (*(-1)) (tail aNbP))
-      | head a > 0 && head b < 0    = utilSig (head aPbN : map (*(-1)) (tail aPbN))
-      | head a < 0 && head b < 0    = utilMul 0 (utilNegative a) (utilNegative b)
+      | (head a) < 0 && (head b) > 0    = utilSig (head aNbP : map (*(-1)) (tail aNbP))
+      | (head a) > 0 && (head b) < 0    = utilSig (head aPbN : map (*(-1)) (tail aPbN))
+      | (head a) < 0 && (head b) < 0    = utilMul 0 (utilNegative a) (utilNegative b)
       | otherwise                   = utilMul 0 a b
   where aNbP = utilMul 0 (utilNegative a) b
         aPbN = utilMul 0 a (utilNegative b)
-        
+
+utilPositive :: BigNumber -> BigNumber
+utilPositive a = ((head a)*(-1):tail a)
+
+getLenA :: Int -> BigNumber -> BigNumber -> Int
+getLenA i a b
+      | less (take i a) b     = getLenA (i + 1) a b
+      | otherwise             = i
+
+one = [1]
+
+utilDiv :: BigNumber -> BigNumber -> BigNumber -> BigNumber
+utilDiv _ [] b = []
+utilDiv _ a [] = []
+utilDiv i a b
+      | less quo initA && not (less prod initA) && divisorRest /= []            = somaBN i (utilDiv one (sub ++ divisorRest) b)
+      | otherwise                                                               = utilDiv (somaBN i one) a b
+  where initA = drop (getLenA 0 a b) a
+        quo = mulBN i b
+        prod = mulBN add1 b
+        add1 = somaBN i one
+        sub = subBN initA quo
+        divisorRest = drop (length sub) a
+
+-- 2.7) divBN
+divBN :: BigNumber -> BigNumber -> BigNumber
+divBN a b
+      | (head a) < 0 && (head b) > 0    = (head aNbP)*(-1) : tail aNbP
+      | (head a) > 0 && (head b) < 0    = (head aPbN)*(-1) : tail aNbP
+      | (head a) < 0 && (head b) < 0    = utilDiv one (utilNegative a) (utilNegative b)
+      | otherwise                       = utilDiv one a b
+  where aNbP = utilDiv one (utilPositive a) b
+        aPbN = utilDiv one a (utilPositive b)
