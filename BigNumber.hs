@@ -86,8 +86,8 @@ offsets x = ["onze", "doze", "treze", "catorze", "quinze", "dezasseis", "dezasse
 -- Funções úteis para as operações
 utilNegative :: BigNumber -> BigNumber
 utilNegative a
-      | head a < 0  = head a : [ (a !! x)*(-1) | x<-[1..len]]
-      | otherwise   = a
+      | head a < 0                  = head a : [ (a !! x)*(-1) | x<-[1..len]]
+      | otherwise                   = a
   where len = length a - 1
 
 utilPad :: Int -> BigNumber -> BigNumber
@@ -127,13 +127,21 @@ utilSub l
         y = head (drop 1 l)
         xs = drop 2 l
 
+utilSig :: BigNumber -> BigNumber
+utilSig num
+      | any (<0) num == True && head num > 0 = (head num)*(-1) : (map (abs) (tail num))
+      | any (<0) num == True && head num < 0 = head num : map (abs) (tail num)
+      | otherwise                            = num
+
 processProduct :: BigNumber -> BigNumber
 processProduct [] = []
 processProduct l
-      | abs x > 10 && length l == 1                   = (mod x 10) : [div x 10]
-      | abs x < 10 && length l == 1                   = [x]
-      | abs x > 10 && length l /= 1                   = (mod x 10) : processProduct (y + (quot x 10):xs)  
-      | abs x < 10 && length l /= 1                   = x : processProduct (y:xs)
+      | abs x >= 10 && length l == 1 && x >= 0         = (mod x 10) : [div x 10]
+      | abs x >= 10 && length l == 1 && x < 0          = (rem x 10) : [quot x 10]
+      | abs x < 10 && length l == 1                    = [x]
+      | abs x >= 10 && length l /= 1 && x >= 0         = (mod x 10) : processProduct (y + (div x 10):xs) 
+      | abs x >= 10 && length l /= 1 && x < 0          = (rem x 10) : processProduct (y + (quot x 10):xs)  
+      | abs x < 10 && length l /= 1                    = x : processProduct (y:xs)
   where x = head l
         y = head (drop 1 l)
         xs = drop 2 l
@@ -143,7 +151,7 @@ utilMul i a b
       | length b > 1           = somaBN currentProduct (utilMul (i + 1) a next)
       | length b == 1          = somaBN currentProduct [0]
       | otherwise              = []
-  where currentProduct = reverse (processProduct (reverse (utilPadR i (map (*x) a))))
+  where currentProduct = utilSig (reverse (processProduct (reverse (utilPadR i (map (*x) a)))))
         x = last b
         next = init b
 
@@ -180,10 +188,10 @@ subBN a b
 -- 2.6) mulBN
 mulBN :: BigNumber -> BigNumber -> BigNumber
 mulBN a b 
-      | head a < 0 && head b > 0    = head aNbP : map (*(-1)) (tail aNbP)
-      | head a > 0 && head b < 0    = head aNbP : map (*(-1)) (tail aPbN)
+      | head a < 0 && head b > 0    = utilSig (head aNbP : map (*(-1)) (tail aNbP))
+      | head a > 0 && head b < 0    = utilSig (head aPbN : map (*(-1)) (tail aPbN))
       | head a < 0 && head b < 0    = utilMul 0 (utilNegative a) (utilNegative b)
       | otherwise                   = utilMul 0 a b
-  where aNbP = (utilMul 0 (utilNegative a) b)
+  where aNbP = utilMul 0 (utilNegative a) b
         aPbN = utilMul 0 a (utilNegative b)
         
