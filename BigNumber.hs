@@ -139,7 +139,7 @@ utilSoma l
 utilSub :: BigNumber -> BigNumber
 utilSub [] = []
 utilSub l
-      | x < 0 && length l /= 1                     = mod x 10 : utilSub (y - 1:xs)
+      | x < 0 && length l /= 1                     = mod x 10 : utilSub (y - 1:(drop 1 xs))
       | x < 0 && length l == 1                     = mod x 10 : [quot x 10]    
       | x >= 10 && length l /= 1                   = mod x 10 : utilSub (y - 1:xs)
       | x >= 10 && length l == 1                   = mod x 10 : [quot x 10]
@@ -193,19 +193,18 @@ somaBN a b
 -- 2.5 ) subBN
 subBN :: BigNumber -> BigNumber -> BigNumber
 subBN a b
-      | (head a) < (head b) && last a == 0 && (head b) == 0       = somaBN a (((head b))*(-1):tail b)
-      | (head a) < (head b) && (head a) < 0 && (head b) > 0       = somaBN a (((head b))*(-1):tail b)
-      | (head a) < (head b) && (head a) > 0 && (head b) > 0       = ((head subNewOrder)*(-1):tail subNewOrder)
-      | (head a) > 0 && (head b) < 0                              = somaBN a (((head b))*(-1):tail b)
-      | (head a) < 0 && (head b) < 0                              = subBN (((head b))*(-1):tail b) (((head a))*(-1):tail a)
-      | (head a) < 0 && (head b) > 0                              = ((head somaNeg)*(-1):tail somaNeg)
-      | (head a) > 0 && (head b) > 0                              = utilUnpad (reverse (utilSub l))
+      | (head a) >= 0 && (head b) <= 0                              = somaBN a (((head b))*(-1):tail b)
+      | (head a) <= 0 && (head b) <= 0                              = subBN (((head b))*(-1):tail b) (((head a))*(-1):tail a)
+      | (head a) <= 0 && (head b) >= 0                              = ((head somaNeg)*(-1):tail somaNeg)
+      | (head a) >= 0 && (head b) >= 0 && less a b                  = ((head goesNegative)*(-1):tail goesNegative)
+      | (head a) >= 0 && (head b) >= 0                              = utilUnpad (reverse (utilSub l))
   where l = zipWith (-) ra rb
         ra = reverse (utilPad len a)
         rb = reverse (utilPad len b)
         len = max (length a) (length b)
         somaNeg = somaBN (((head a))*(-1):tail a) b
         subNewOrder = subBN b a
+        goesNegative = subBN b a
 
 -- 2.6) mulBN
 mulBN :: BigNumber -> BigNumber -> BigNumber
@@ -231,12 +230,13 @@ utilDiv :: BigNumber -> BigNumber -> BigNumber -> BigNumber
 utilDiv _ [] b = []
 utilDiv _ a [] = []
 utilDiv _ a [1] = a
+utilDiv _ [0] _ = [0]
 utilDiv i a b
       | last a == 0 && last b == 0                                                     = (utilDiv i (init a) (init b)) -- para simplificar contas com números grandes, por exemplo divisão por 10
       | less quo initA && less prod initA                                              = utilDiv (somaBN i one) a b -- este é para ir subindo o i, quando ainda não chegámos ao melhor
       | less quo initA && equal prod initA                                             = somaBN i one -- este é caso cheguemos ao exato que queremos
       | less quo initA && not (less prod initA) && divisorRest /= []                   = i ++ utilDiv one (sub ++ divisorRest) b
-      | less a b                                                                       = []
+      | less quo initA && not (less prod initA) && divisorRest == [0]                  = i ++ [0]   
       | otherwise                                                                      = i
   where initA = if (getLenA 0 a b) /= length a then take (getLenA 0 a b) a else a
         quo = mulBN i b
