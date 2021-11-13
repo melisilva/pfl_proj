@@ -7,9 +7,17 @@ type BigNumber = [Int]
 
 less :: BigNumber -> BigNumber -> Bool
 less a b
+      | length a > length b       = less a (utilPad (length a) b)
+      | length a < length b       = less (utilPad (length b) a) b
       | (head a) == (head b)      = (<) (tail a) (tail b)
       | (head a) < (head b)       = True
       | (head a) > (head b)       = False 
+
+equal :: BigNumber -> BigNumber -> Bool
+equal a b
+      | length a /= length b                                                 = False
+      | not (any (==False) [ (a !! x) == (b !! x) | x<-[0..(length a - 1)]])     = True
+      | otherwise                                                            = False
 
 
 --2.2) Função scanner--->folha 1 1.16 reverse
@@ -185,13 +193,13 @@ somaBN a b
 -- 2.5 ) subBN
 subBN :: BigNumber -> BigNumber -> BigNumber
 subBN a b
-      | (head a) < (head b) && last a == 0 && (head b) == 0     = somaBN a (((head b))*(-1):tail b)
-      | ((head a) < (head b) && (head a) < 0 && (head b) > 0)     = somaBN a (((head b))*(-1):tail b)
+      | (head a) < (head b) && last a == 0 && (head b) == 0       = somaBN a (((head b))*(-1):tail b)
+      | (head a) < (head b) && (head a) < 0 && (head b) > 0       = somaBN a (((head b))*(-1):tail b)
       | (head a) < (head b) && (head a) > 0 && (head b) > 0       = ((head subNewOrder)*(-1):tail subNewOrder)
-      | (head a) > 0 && (head b) < 0                          = somaBN a (((head b))*(-1):tail b)
-      | (head a) < 0 && (head b) < 0                          = subBN (((head b))*(-1):tail b) (((head a))*(-1):tail a)
-      | (head a) < 0 && (head b) > 0                          = ((head somaNeg)*(-1):tail somaNeg)
-      | (head a) > 0 && (head b) > 0                          = utilUnpad (reverse (utilSub l))
+      | (head a) > 0 && (head b) < 0                              = somaBN a (((head b))*(-1):tail b)
+      | (head a) < 0 && (head b) < 0                              = subBN (((head b))*(-1):tail b) (((head a))*(-1):tail a)
+      | (head a) < 0 && (head b) > 0                              = ((head somaNeg)*(-1):tail somaNeg)
+      | (head a) > 0 && (head b) > 0                              = utilUnpad (reverse (utilSub l))
   where l = zipWith (-) ra rb
         ra = reverse (utilPad len a)
         rb = reverse (utilPad len b)
@@ -210,7 +218,7 @@ mulBN a b
         aPbN = utilMul 0 a (utilNegative b)
 
 utilPositive :: BigNumber -> BigNumber
-utilPositive a = ((head a)*(-1):tail a)
+utilPositive a = mulBN [-1] a
 
 getLenA :: Int -> BigNumber -> BigNumber -> Int
 getLenA i a b
@@ -222,22 +230,28 @@ one = [1]
 utilDiv :: BigNumber -> BigNumber -> BigNumber -> BigNumber
 utilDiv _ [] b = []
 utilDiv _ a [] = []
+utilDiv _ a [1] = a
 utilDiv i a b
-      | less quo initA && not (less prod initA) && divisorRest /= []            = somaBN i (utilDiv one (sub ++ divisorRest) b)
-      | otherwise                                                               = utilDiv (somaBN i one) a b
-  where initA = drop (getLenA 0 a b) a
+      | last a == 0 && last b == 0                                                     = (utilDiv i (init a) (init b)) -- para simplificar contas com números grandes, por exemplo divisão por 10
+      | less quo initA && less prod initA                                              = utilDiv (somaBN i one) a b -- este é para ir subindo o i, quando ainda não chegámos ao melhor
+      | less quo initA && equal prod initA                                             = somaBN i one -- este é caso cheguemos ao exato que queremos
+      | less quo initA && not (less prod initA) && divisorRest /= []                   = i ++ utilDiv one (sub ++ divisorRest) b
+      | less a b                                                                       = []
+      | otherwise                                                                      = i
+  where initA = if (getLenA 0 a b) /= length a then take (getLenA 0 a b) a else a
         quo = mulBN i b
         prod = mulBN add1 b
         add1 = somaBN i one
         sub = subBN initA quo
-        divisorRest = drop (length sub) a
+        divisorRest = if length initA /= length a then drop (length initA) a else []
 
 -- 2.7) divBN
-divBN :: BigNumber -> BigNumber -> BigNumber
+divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
 divBN a b
-      | (head a) < 0 && (head b) > 0    = (head aNbP)*(-1) : tail aNbP
-      | (head a) > 0 && (head b) < 0    = (head aPbN)*(-1) : tail aNbP
-      | (head a) < 0 && (head b) < 0    = utilDiv one (utilNegative a) (utilNegative b)
-      | otherwise                       = utilDiv one a b
-  where aNbP = utilDiv one (utilPositive a) b
-        aPbN = utilDiv one a (utilPositive b)
+      | (head a) < 0 && (head b) < 0    = (negative, subBN (utilPositive a) (mulBN negative (utilPositive b)))
+      | (head a) < 0 || (head b) < 0    = (mulBN [-1] negative, mulBN [-1] resNegative)  
+      | less a b                        = ([0], [0])
+      | otherwise                       = (pos, subBN a (mulBN pos b))
+  where negative = utilDiv one (utilPositive a) (utilPositive b)
+        resNegative = subBN (utilPositive a) (mulBN (utilPositive b) negative)
+        pos = utilDiv one a b
