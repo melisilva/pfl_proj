@@ -11,7 +11,7 @@ less a b
       | length a < length b       = less (utilPad (length b) a) b
       | (head a) == (head b)      = (<) (tail a) (tail b)
       | (head a) < (head b)       = True
-      | (head a) > (head b)       = False 
+      | (head a) > (head b)       = False
 
 equal :: BigNumber -> BigNumber -> Bool
 equal a b
@@ -140,7 +140,7 @@ utilSub :: BigNumber -> BigNumber
 utilSub [] = []
 utilSub l
       | x < 0 && length l /= 1                     = mod x 10 : utilSub (y - 1:(drop 1 xs))
-      | x < 0 && length l == 1                     = mod x 10 : [quot x 10]    
+      | x < 0 && length l == 1                     = mod x 10 : [quot x 10]
       | x >= 10 && length l /= 1                   = mod x 10 : utilSub (y - 1:xs)
       | x >= 10 && length l == 1                   = mod x 10 : [quot x 10]
       | x >= 0 && x < 10 && length l /= 1          = x : utilSub (y:xs)
@@ -161,8 +161,8 @@ processProduct l
       | abs x >= 10 && length l == 1 && x >= 0         = (mod x 10) : [div x 10]
       | abs x >= 10 && length l == 1 && x < 0          = (rem x 10) : [quot x 10]
       | abs x < 10 && length l == 1                    = [x]
-      | abs x >= 10 && length l /= 1 && x >= 0         = (mod x 10) : processProduct (y + (div x 10):xs) 
-      | abs x >= 10 && length l /= 1 && x < 0          = (rem x 10) : processProduct (y + (quot x 10):xs)  
+      | abs x >= 10 && length l /= 1 && x >= 0         = (mod x 10) : processProduct (y + (div x 10):xs)
+      | abs x >= 10 && length l /= 1 && x < 0          = (rem x 10) : processProduct (y + (quot x 10):xs)
       | abs x < 10 && length l /= 1                    = x : processProduct (y:xs)
   where x = head l
         y = head (drop 1 l)
@@ -208,7 +208,7 @@ subBN a b
 
 -- 2.6) mulBN
 mulBN :: BigNumber -> BigNumber -> BigNumber
-mulBN a b 
+mulBN a b
       | (head a) < 0 && (head b) > 0    = utilSig (head aNbP : map (*(-1)) (tail aNbP))
       | (head a) > 0 && (head b) < 0    = utilSig (head aPbN : map (*(-1)) (tail aPbN))
       | (head a) < 0 && (head b) < 0    = utilMul 0 (utilNegative a) (utilNegative b)
@@ -217,7 +217,7 @@ mulBN a b
         aPbN = utilMul 0 a (utilNegative b)
 
 utilPositive :: BigNumber -> BigNumber
-utilPositive a = mulBN [-1] a
+utilPositive a = if head(a)<0 then mulBN [-1] a else a
 
 getLenA :: Int -> BigNumber -> BigNumber -> Int
 getLenA i a b
@@ -237,7 +237,7 @@ utilDiv i a b
       | less quo initA && equal prod initA && divisorRest == [0]                       = somaBN i one ++ [0]
       | less quo initA && equal prod initA                                             = somaBN i one -- este é caso cheguemos ao exato que queremos
       | less quo initA && not (less prod initA) && divisorRest /= []                   = i ++ utilDiv one (sub ++ divisorRest) b
-      | less quo initA && not (less prod initA) && divisorRest == [0]                  = i ++ [0]   
+      | less quo initA && not (less prod initA) && divisorRest == [0]                  = i ++ [0]
       | otherwise                                                                      = i
   where initA = if (getLenA 0 a b) /= length a then take (getLenA 0 a b) a else a
         quo = mulBN i b
@@ -250,7 +250,7 @@ utilDiv i a b
 divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
 divBN a b
       | (head a) < 0 && (head b) < 0    = (negative, subBN (utilPositive a) (mulBN negative (utilPositive b)))
-      | (head a) < 0 || (head b) < 0    = (mulBN [-1] negative, mulBN [-1] resNegative)  
+      | (head a) < 0 || (head b) < 0    = (mulBN [-1] negative, mulBN [-1] resNegative)
       | less a b                        = ([0], [0])
       | otherwise                       = (pos, subBN a (mulBN pos b))
   where negative = utilDiv one (utilPositive a) (utilPositive b)
