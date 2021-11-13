@@ -234,6 +234,7 @@ utilDiv _ [0] _ = [0]
 utilDiv i a b
       | last a == 0 && last b == 0                                                     = (utilDiv i (init a) (init b)) -- para simplificar contas com números grandes, por exemplo divisão por 10
       | less quo initA && less prod initA                                              = utilDiv (somaBN i one) a b -- este é para ir subindo o i, quando ainda não chegámos ao melhor
+      | less quo initA && equal prod initA && divisorRest == [0]                       = somaBN i one ++ [0]
       | less quo initA && equal prod initA                                             = somaBN i one -- este é caso cheguemos ao exato que queremos
       | less quo initA && not (less prod initA) && divisorRest /= []                   = i ++ utilDiv one (sub ++ divisorRest) b
       | less quo initA && not (less prod initA) && divisorRest == [0]                  = i ++ [0]   
