@@ -139,7 +139,7 @@ utilSoma l
 utilSub :: BigNumber -> BigNumber
 utilSub [] = []
 utilSub l
-      | x < 0 && length l /= 1                     = mod x 10 : utilSub (y - 1:(drop 1 xs))
+      | x < 0 && length l /= 1                     = mod x 10 : utilSub (y - 1:xs)
       | x < 0 && length l == 1                     = mod x 10 : [quot x 10]
       | x >= 10 && length l /= 1                   = mod x 10 : utilSub (y - 1:xs)
       | x >= 10 && length l == 1                   = mod x 10 : [quot x 10]
@@ -221,8 +221,8 @@ utilPositive a = if head(a)<0 then mulBN [-1] a else a
 
 getLenA :: Int -> BigNumber -> BigNumber -> Int
 getLenA i a b
-      | less (take i a) b     = getLenA (i + 1) a b
-      | otherwise             = i
+      | less (take i a) b || equal (take i a) b   = getLenA (i + 1) a b
+      | otherwise                                 = i
 
 one = [1]
 
@@ -233,9 +233,10 @@ utilDiv _ a [1] = a
 utilDiv _ [0] _ = [0]
 utilDiv i a b
       | last a == 0 && last b == 0                                                     = (utilDiv i (init a) (init b)) -- para simplificar contas com números grandes, por exemplo divisão por 10
-      | less quo initA && less prod initA                                              = utilDiv (somaBN i one) a b -- este é para ir subindo o i, quando ainda não chegámos ao melhor
+      | last a == 0 && last b == head a && length a > length b + 1                     = somaBN i [0] ++ [0] 
       | less quo initA && equal prod initA && divisorRest == [0]                       = somaBN i one ++ [0]
       | less quo initA && equal prod initA                                             = somaBN i one -- este é caso cheguemos ao exato que queremos
+      | less quo initA && less prod initA                                              = utilDiv (somaBN i one) a b -- este é para ir subindo o i, quando ainda não chegámos ao melhor
       | less quo initA && not (less prod initA) && divisorRest /= []                   = i ++ utilDiv one (sub ++ divisorRest) b
       | less quo initA && not (less prod initA) && divisorRest == [0]                  = i ++ [0]
       | otherwise                                                                      = i
@@ -249,7 +250,7 @@ utilDiv i a b
 -- 2.7) divBN
 divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
 divBN a b
-      | (head a) < 0 && (head b) < 0    = (negative, subBN (utilPositive a) (mulBN negative (utilPositive b)))
+      | (head a) < 0 && (head b) < 0    = (negative, subBN a (mulBN negative b))
       | (head a) < 0 || (head b) < 0    = (mulBN [-1] negative, mulBN [-1] resNegative)
       | less a b                        = ([0], [0])
       | otherwise                       = (pos, subBN a (mulBN pos b))
