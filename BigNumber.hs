@@ -1,10 +1,9 @@
 import Data.String
---BigNumber podem ser positivos ou negativos
---O que fiz até agora só tem em conta os números positivos
+
 --2.1) Definição de BigNumber
 type BigNumber = [Int]
 
-
+-- Operadores de comparação
 less :: BigNumber -> BigNumber -> Bool
 less a b
       | length a > length b       = less a (utilPad (length a) b)
@@ -15,40 +14,41 @@ less a b
 
 equal :: BigNumber -> BigNumber -> Bool
 equal a b
-      | length a /= length b                                                 = False
+      | length a /= length b                                                     = False
       | not (any (==False) [ (a !! x) == (b !! x) | x<-[0..(length a - 1)]])     = True
-      | otherwise                                                            = False
+      | otherwise                                                                = False
 
+--2.2) Função scanner
+toBN :: Int -> BigNumber
+toBN n
+      | abs n > 10 && n < 0     = (rem n 10:toBN (quot n 10))
+      | otherwise               = [rem n 10]
 
---2.2) Função scanner--->folha 1 1.16 reverse
-utilClean :: String -> [String]
-utilClean str = [ new !! x | x<-[0..(length new - 1)], mod x 2 == 0]
-      where new = words str
-
--- scanner :: String -> BigNumber
--- where l = utilClean str
-
---Centro e trinta == [1,3,0]
+scanner :: String -> BigNumber
+scanner str
+      | head str == '-'            = (head treatAsPosRes: map (*(-1)) (tail treatAsPosRes))
+      | otherwise                  = treatAsPosRes
+ where treatAsPosRes = reverse (toBN num)
+       num= read str :: Int
 
 --2.3) Função output
-fromDigits :: BigNumber -> Int
-conv :: BigNumber -> BigNumber
-output :: BigNumber -> String
-strinNum :: [String]->String
+fromBN :: BigNumber -> Int
+fromBN xs = if head(xs) < 0 then (-1)*(sum (zipWith (*) (reverse (conv xs)) (iterate (*10) 1))) else sum (zipWith (*) (reverse xs) (iterate (*10) 1))
 
+conv :: BigNumber -> BigNumber
 conv xs = ((-1)*head(xs)): drop 1 xs
 
+strinNum :: [String] -> String
 strinNum xs = if length(xs) /= 1 then head(xs) ++ strinNum(drop 1 xs) else head(xs)
 
+output :: BigNumber -> String
 output xs = strinNum (map show xs)
-
-fromDigits xs = if head(xs) < 0 then (-1)*(sum (zipWith (*) (reverse (conv xs)) (iterate (*10) 1))) else sum (zipWith (*) (reverse xs) (iterate (*10) 1))
 
 -- Funções úteis para as operações
 utilNegative :: BigNumber -> BigNumber
 utilNegative a
       | (head a) < 0                  = (head a) : [ (a !! x)*(-1) | x<-[1..len]]
-      | otherwise                   = a
+      | otherwise                     = a
   where len = length a - 1
 
 utilPad :: Int -> BigNumber -> BigNumber
