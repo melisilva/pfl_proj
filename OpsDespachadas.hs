@@ -22,3 +22,11 @@ divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
 divBN a b = (algarismos x, algarismos y)
       where x = div (fromDigits a) (fromDigits b)
             y = mod (fromDigits a) (fromDigits b)
+
+
+-- fibLista 1 pq n tava a compilar
+fibLista :: (Integral a) => a -> a
+fibLista = (map fib [0..] !!)
+  where fib 0 = 0
+        fib 1 = 1
+        fib a = fibLista (a-2) + fibLista (a-1)

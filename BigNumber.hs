@@ -1,3 +1,6 @@
+module BigNumber (BigNumber,
+                  less, equal, scanner, output, somaBN, subBN, divBN, mulBN, fromBN) where
+
 import Data.String
 
 --2.1) Definição de BigNumber
