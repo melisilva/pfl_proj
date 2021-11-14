@@ -23,13 +23,27 @@ fibListaInfinita a = lista !! (fromIntegral a)
 
 -- Ex3
 -- 3.1
-fibRecBN :: BigNumber -> BigNumber
-fibRecBN [0] = [0]
-fibRecBN [1] = [1]
-fibRecBN a | not (less a [0]) = somaBN (fibRecBN (subBN a [2])) (fibRecBN (subBN a [1]))
+zero = [0]
+one = [1]
+two = [2]
+
+fibRecBN :: Int -> BigNumber
+fibRecBN 0 = [0]
+fibRecBN 1 = [1]
+fibRecBN a | a > 0     = somaBN (fibRecBN (a - 2)) (fibRecBN (a - 1)) 
            | otherwise = error "Número negativo"
 
--- fibListaBN :: BigNumber -> BigNumber
--- fibListaBN n = lista !! (read (output n) :: Int)
--- where lista = scanner "0" ++ scanner "1" ++ map foo [2..]
---     foo n = somaBN (lista !! (fromBN (subBN n [1]))) (lista !! (fromBN (subBN n [2])))
+fibRecBN2 :: BigNumber -> BigNumber
+fibRecBN2 [0] = [0]
+fibRecBN2 [1] = [1]
+fibRecBN2 a | not (less a zero) = somaBN (fibRecBN2 (subBN a two)) (fibRecBN2 (subBN a one))
+            | otherwise = error "Número negativo"
+
+fibListaBN :: Int -> BigNumber
+fibListaBN n = lista !! n
+ where lista = [zero] ++ [one] ++ [ foo z | z<-[2..]]
+       foo n = somaBN (lista !! (n - 1)) (lista !! (n - 2))
+
+fibListaInfinitaBN :: Int -> BigNumber
+fibListaInfinitaBN n = lista !! n
+  where lista = [zero] ++ [one] ++ [somaBN a b | (a, b)<- zip lista (tail lista)]

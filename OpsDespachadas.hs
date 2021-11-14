@@ -30,3 +30,4 @@ fibLista = (map fib [0..] !!)
   where fib 0 = 0
         fib 1 = 1
         fib a = fibLista (a-2) + fibLista (a-1)
+
