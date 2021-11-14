@@ -3,6 +3,8 @@ algarismos :: Int -> BigNumber
 algarismos 0 = []
 algarismos n = if n<0 then conv(algarismos(div (n*(-1)) 10) ++ [mod (n*(-1)) 10]) else algarismos (div n 10) ++ [mod n 10]
 
+strinNum xs = if length(xs) /= 1 then head(xs) ++ strinNum(drop 1 xs) else head(xs)
+
 --2.4) Função somaBN
 somaBN :: BigNumber -> BigNumber -> BigNumber
 somaBN a b = algarismos(fromDigits(a)+fromDigits(b))
