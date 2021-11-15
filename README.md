@@ -83,9 +83,9 @@ Estas duas funções estão fortemente interligadas, procurando fazer com que to
 Cada uma das funções tem o seu conjunto de funções auxiliares, normalmente começadas com o sufixo *util*. Antes de nos debruçarmos sobre a lógica por detrás das duas operações aritméticas em si, iremos listar estas funções auxiliares relevantes mas de menor importância, o que ajudará a perceber a lógica por detrás das operações:
 
 - *utilPad* acrescenta algarismos 0 a um *BigNumber*, pela esquerda - desta forma, números de diferentes comprimentos em algarismos podem ser corretamente alinhados;
-- *utilUnpad* reverte o que é feito pelas funções *utilPad* e *utilPadR*
+- *utilUnpad* reverte o que é feito pela função *utilPad*;
 - *toDigits* converte um número *Int* para *BigNumber*;
-- *delZero* retira zeros à esquerda num número *BigNumber*, mas permite obter o número 0 em *BigNumber* ([0]);
+- *delZero* ajuda a função *toDigits* a converter *Int* para *BigNumber*.
 
 Sobram apenas as funções *utilSoma* e *utilSub*, que já explicaremos. Para começar, falaremos da lógica nas próprias funções *somaBN* e *subBN*: cada uma destas determina qual os sinais dos seus operandos, retornando algo diferente para cada um dos casos possíveis: ambos positivos, um positivo e um negativo e ambos negativos. Claramente, cada um segue uma lógica diferente que acreditamos ser fácil de induzir: *somaBN* apenas chama *utilSoma* com dois operandos positivos e o mesmo se aplica a *subBN* mas com *utilSub* - os casos restantes são apenas passos recursivos ou chamadas da operação contrária que aproximem a operação de uma com ambos os operandos positivos.
 
@@ -102,11 +102,11 @@ Os operandos são revertidos para se emular aquilo que se faz com contas realiza
 
 Por sua vez, os casos que acabam a execução da função são então um resultado menor que 10, o que apenas obriga a que se retorne esse resultado<sup>[2]</sup>, ou um resultado maior ou igual a dez, que aumenta o comprimento do resultado em 1 por uma última vez.
 
-![1](https://github.com/melisilva/pfl_proj/blob/main/1.png)
+![1](1.png)
 
 Já *utilSub* lida com mais casos: se um componente da lista for negativo, precisamos de fazer o seu *mod 10* para obter o seu algarismo das unidades, após o que **subtraímos** 1 à próxima coluna à esquerda <sup>[1]</sup>. De outra forma, repete-se o que se faz com números menores que 10 em *utilSoma*.
 
-![2](https://github.com/melisilva/pfl_proj/blob/main/2.png)
+![2](2.png)
 
 Não há mais nada de muito importante a falar, visto acharmos que a forma como *somaBN* e *subBN* estão estruturadas em si é muito transparente - em ambas apenas efetuamos alinhamentos dos operadores adicionando zeros, revertemos os operadores para que as funções *utilSoma* e *utilSub* possam iterá-las de início ao fim seguindo a ordem direita-esquerda que se seguiria ao fazer a conta manualmente e revertemos o resultado do processamento da lista resultante da chamada a *zipWith* para obtermos o resultado.
 
@@ -126,7 +126,7 @@ As novas funções *util* são:
 - *processProduct*, que faz o mesmo processamento que *utilSub* e *utilSoma* adaptado à multiplicação;
 - *utilSig*, que faz um último processamento do produto, verificando se este é negativo ou não - segue a regra de que caso algum algarismo seja menor que zero, então é porque o número de que faz parte é negativo;
 
-![3](https://github.com/melisilva/pfl_proj/blob/main/3.png)
+![3](3.png)
 
 *mulBN*, tal como as operações explicadas anteriormente, lida sobretudo com os tipos de operandos que recebe, estando preparada para interpretar os resultados de forma correta: se apenas um dos operandos for negativo, o resultado terá de ser negativo; se ambos os operandos forem positivos ou negativos, o resultado terá de ser positivo.
 
@@ -142,13 +142,13 @@ Assim sendo, sempre que se chama *utilMul* recursivamente, é adicionado 1 à va
 
 Por fim, *processProduct* é muito semelhante a *utilSoma* e *utilSub*, mas enquanto estas duas funções apenas lidam com, no máximo, números inteiros no intervalo [-19, 19], com a multiplicação, podemos lidar com números em [-100, 100]. Isto significa que não basta *somar 1* à próxima coluna, mas sim somar-lhe o algarismo das dezenas, que obtivemos fazendo a divisão inteira com *quot* (números negativos) ou *div* (números positivos). Ao mesmo tempo, para que não haja erros na multiplicação e *utilSig* funcione corretamente, sempre que o número com que estamos a lidar seja negativo, utilizamos a função *rem* para obter o algarismo das unidades *negativo*.
 
-![4](https://github.com/melisilva/pfl_proj/blob/main/4.png)
+![4](4.png)
 
 #### **divBN**
 
 A função de divisão para *BigNumber* é a única que não usa *zipWith* de todas as operações aritméticas. Ao invés disso, adotamos uma raciocínio baseado na subtração, tal como se faz com as contas manuais de divisão, com quociente e resto. Esta função cria exatamente o raciocínio desse processo manual, e, para isso, criámos uma função de comparação entre *BigNumber* *(less)*, por ser necessário para definirmos a nossa janela de divisão. Vejamos o exemplo abaixo.
 
-![5](https://github.com/melisilva/pfl_proj/blob/main/5.png)
+![5](5.png)
 
 Com janela de divisão, referimo-nos à parte do dividendo de menor comprimento possível que é maior que o divisor, por exemplo, a primeira janela de divisão de *1234 / 13* não pode ser *1* nem *12*, apenas *123*, pois só 123 > 13. Daqui, é efetuada a divisão entre a primeira janela e o divisor, que nos dá um primeiro resultado que será concatenado àqueles que se lhe seguirem, com a janela de divisão a mudar.
 
@@ -156,7 +156,7 @@ A próxima janela de divisão é igual à concatenação do resultado da subtra�
 
 Este mecanismo é seguido para *divBN*, sendo levado a cabo por *utilDiv*. 
 
-![6](https://github.com/melisilva/pfl_proj/blob/main/6.png)
+![6](6.png)
 
 *utilDiv* procura, utilizando a variável ***i*** como iterador, o maior valor para ***i*** que verifique que 
 $$
