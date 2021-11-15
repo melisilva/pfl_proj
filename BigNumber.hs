@@ -77,10 +77,10 @@ delZero n = if (head(n)==0 && length(n)/=1) then drop 1 n else n
 utilSoma :: BigNumber -> BigNumber
 utilSoma [] = []
 utilSoma l
-      | x >= 10 && length l /= 1           = mod x 10 : utilSoma (y+1:xs)
-      | x >= 10 && length l == 1           = mod x 10 : [quot x 10]
-      | x < 10 && length l /= 1            = x : utilSoma (y:xs)
-      | x < 10 && length l == 1            = [x]
+      | x >= 10 && length l /= 1           = mod x 10 : utilSoma (y+1:xs) -- [1]
+      | x >= 10 && length l == 1           = mod x 10 : [quot x 10] -- [3]
+      | x < 10 && length l /= 1            = x : utilSoma (y:xs) -- [1] [2]
+      | x < 10 && length l == 1            = [x] -- [2]
   where x = head l
         y = head (drop 1 l)
         xs = drop 2 l
@@ -88,9 +88,9 @@ utilSoma l
 utilSub :: BigNumber -> BigNumber
 utilSub [] = []
 utilSub l
-      | x < 0 && length l /= 1                     = mod x 10 : utilSub (y - 1:xs)
+      | x < 0 && length l /= 1                     = mod x 10 : utilSub (y - 1:xs) -- [1]
       | x < 0 && length l == 1                     = mod x 10 : [quot x 10]
-      | x >= 10 && length l /= 1                   = mod x 10 : utilSub (y - 1:xs)
+      | x >= 10 && length l /= 1                   = mod x 10 : utilSub (y - 1:xs) -- [1]
       | x >= 10 && length l == 1                   = mod x 10 : [quot x 10]
       | x >= 0 && x < 10 && length l /= 1          = x : utilSub (y:xs)
       | x >= 0 && x < 10 && length l == 1          = [x]
