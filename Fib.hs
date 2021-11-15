@@ -15,9 +15,9 @@ fibLista n = lista !! (fromIntegral n)
         foo n = lista !! (n-1) + lista !! (n-2)
 
 --1.3) Função de fibonacci lista infinita
--- fibListaInfinita :: (Integral a) => a -> a
+fibListaInfinita :: (Integral a) => a -> a
 fibListaInfinita a = lista !! (fromIntegral a)
-  where lista = 0 : 1 : [n+b | (n,b)<- zip lista (tail lista)]
+  where lista = 0 : 1 : zipWith (+) lista (drop 1 lista)
 --where lista = 0 : 1 : zipWith (+) lista (tail lista)
 --where lista = 0 : scanl(+) 1 lista
 

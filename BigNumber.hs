@@ -65,8 +65,6 @@ utilUnpad (x:xs)
       | x == 0 && length (x:xs) /= 1   = utilUnpad (drop 1 (x:xs))
       | otherwise = (x:xs)
 
-utilUnPad' xs = if (length xs /= 1 && head(xs) == 0) then utilUnPad'(drop 1 xs) else xs
-
 toDigits :: Int -> BigNumber
 toDigits 0 = [0]
 toDigits n = if n<0 then conv(toDigits(div (n*(-1)) 10) ++ [mod (n*(-1)) 10]) else toDigits (div n 10) ++ [mod n 10]
@@ -126,7 +124,6 @@ utilMul i a b
         x = last b
         next = init b
 
-
 utilPositive :: BigNumber -> BigNumber
 utilPositive a = if head(a)<0 then mulBN [-1] a else a
 
@@ -135,11 +132,9 @@ getLenA i a b
       | less (take i a) b || equal (take i a) b   = getLenA (i + 1) a b
       | otherwise                                 = i
 
-one = [1]
-
 utilDiv :: BigNumber -> BigNumber -> BigNumber -> BigNumber
-utilDiv _ [] b = []
-utilDiv _ a [] = []
+utilDiv _ [0] b = [0]
+utilDiv _ a [0 = [0]
 utilDiv _ a [1] = a
 utilDiv _ [0] _ = [0]
 utilDiv i a b
@@ -157,9 +152,14 @@ utilDiv i a b
         add1 = somaBN i one
         sub = subBN initA quo
         divisorRest = if length initA /= length a then drop (length initA) a else []
+        one = [1]
 
 -- 2.4 ) somaBN
 somaBN :: BigNumber -> BigNumber -> BigNumber
+somaBN [0] b = b
+somaBN a [0] = a
+somaBN a [] = a
+somaBN [] b = b
 somaBN a b
       | (head a) < 0 && (head b) > 0    = subBN b (((head a))*(-1):tail a)
       | (head a) > 0 && (head b) < 0    = subBN a (((head b))*(-1):tail b)
@@ -173,6 +173,10 @@ somaBN a b
 
 -- 2.5 ) subBN
 subBN :: BigNumber -> BigNumber -> BigNumber
+subBN a [] = a
+subBN [] b = ((head b)*(-1):tail b)
+subBN a [0] = a
+subBN [0] b = ((head b)*(-1):tail b)
 subBN a b
       | (head a) >= 0 && (head b) <= 0                              = somaBN a (((head b))*(-1):tail b)
       | (head a) <= 0 && (head b) <= 0                              = subBN (((head b))*(-1):tail b) (((head a))*(-1):tail a)
@@ -189,6 +193,12 @@ subBN a b
 
 -- 2.6) mulBN
 mulBN :: BigNumber -> BigNumber -> BigNumber
+mulBN [] b = [0]
+mulBN a [] = [0]
+mulBN a [0] = [0]
+mulBN [0] b = [0]
+mulBN a [1] = a
+mulBN [1] b = b 
 mulBN a b
       | (head a) < 0 && (head b) > 0    = utilSig (head aNbP : map (*(-1)) (tail aNbP))
       | (head a) > 0 && (head b) < 0    = utilSig (head aPbN : map (*(-1)) (tail aPbN))
@@ -199,6 +209,10 @@ mulBN a b
 
 -- 2.7) divBN
 divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
+divBN [] _ = []
+divBN _ [] = error "EMPTY DIVISOR"
+divBN [0] _ = ([0], [0])
+divBN [1] _ = ([1], [1])
 divBN a b
       | (head a) < 0 && (head b) < 0    = (negative, subBN a (mulBN negative b))
       | (head a) < 0 || (head b) < 0    = (mulBN [-1] negative, mulBN [-1] resNegative)
@@ -207,3 +221,10 @@ divBN a b
   where negative = utilDiv one (utilPositive a) (utilPositive b)
         resNegative = subBN (utilPositive a) (mulBN (utilPositive b) negative)
         pos = utilDiv one a b
+        one = [1]
+
+-- Alínea 5
+safeDivBN :: BigNumber -> BigNumber -> Maybe (BigNumber, BigNumber)
+safeDivBN a b
+      | b == [0]              = fail "ERROR: Division by Zero"
+      | otherwise             = Just (divBN a b)

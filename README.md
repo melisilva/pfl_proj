@@ -28,7 +28,7 @@ Esta função é muito semelhante à anterior, mas utiliza antes uma lista infin
 
 #### **Definição do Tipo BigNumber**
 
-Definimos o tipo *BigNumber* como uma lista de valores *Int*. Números negativos são denotados com o primeiro algarismo negativo (ex.: *[-1, 0]* é -10).
+Definimos o tipo *BigNumber* como uma lista de valores *Int*. Números negativos são denotados com o primeiro algarismo negativo (ex.: *[-1, 0]* é -10). A lista vazia é tratada como [0] em padrões das operações aritméticas.
 
 #### Scanner
 
@@ -71,6 +71,8 @@ Esta função segue a mesma lógica da sua correspondente na alínea 1, contudo,
 ### **Alínea 5**
 
 #### safeDivBN
+
+Esta função implementa uma divisão segura por [0], impedindo quaisquer cálculos se o divisor for este. De outra forma, chama a função ***divBN*** para efetuar a divisão.
 
 ## Implementação das Operações Aritméticas para *BigNumber*
 
@@ -167,4 +169,44 @@ onde *initA* é a nossa janela de divisão atual, de comprimento calculado pela 
 Tirando isto, apenas existem os casos especiais em que a janela de divisão chegou ao fim do dividendo: quando o único algarismo do que sobra do dividendo é um *zero*, temos que concatenar um *0* ao quociente. De outra forma, continuamos a incrementar a variável *i* até encontrarmos o valor para o qual *i + 1* já não verifique a condição acima.
 
 ## **Alínea 4**
+
+Esta alínea pedia que se efetuasse a comparação entre as funções para cálculo de números de Fibonacci feitas nas alíneas 1 e 3. Para efetuar esta comparação, servimo-nos do comando *:set +s* para efetuar a contagem dos tempos de execução. Com isto, fomos aumentando em ordem de grandeza.
+
+Para que os resultados fossem viáveis, todas as contagens de tempo foram obtidas a partir do mesmo computador, além de que estabelecemos que esperaríamos apenas 30 segundos no máximo à espera de um resultado. Marcámos estas ocorrências na tabela abaixo com *TIMEOUT* e, à primeira ocorrência deste, todas as ordens maiores foram marcadas igualmente.
+
+| ***n*** | *fibRec*  | *fibLista* | *fibListaInfinita* |
+| :-----: | :-------: | :--------: | :----------------: |
+|    1    |   0.00s   |   0.00s    |       0.00s        |
+|   10    |   0.00s   |   0.00s    |       0.00s        |
+|   100   | *TIMEOUT* |   0.00s    |       0.01s        |
+|  1000   | *TIMEOUT* |   0.02s    |       0.01s        |
+|  10000  | *TIMEOUT* |   0.60s    |       0.07s        |
+| 100000  | *TIMEOUT* | *TIMEOUT*  |       1.22s        |
+| 1000000 | *TIMEOUT* | *TIMEOUT*  |    *TIMEOUT* *     |
+
+<center><b>Tabela 1</b> - Tempos de Execução para funções da Alínea 1.</center>
+
+<sup>*</sup> Por curiosidade, deixámos este correr até ao fim. Demorou 55.67s.
+
+Logo, só com os primeiros resultados, podemos ver que *fibListaInfinita* é a mais eficiente e eficaz implementação do cálculo de números de Fibonacci, por ser a mais rápida quando a ordem de *n* é maior e também por ser a que, nas condições utilizadas, é a que sofre *TIMEOUT* em último lugar.
+
+Façamos o mesmo para as funções com *BigNumber*. A única alteração que faremos é que esperaremos não por 30 segundos até declarar um *TIMEOUT*, mas sim o dobro do tempo.
+
+| ***n*** | *fibRecBN* | *fibListaBN* | *fibListaInfinitaBN* |
+| :-----: | :--------: | :----------: | :------------------: |
+|    1    |   0.00s    |    0.00s     |        0.00s         |
+|   10    |   0.00s    |    0.00s     |        0.00s         |
+|   100   | *TIMEOUT*  |    0.01s     |        0.01s         |
+|  1000   | *TIMEOUT*  |    0.32s     |        0.33s         |
+|  10000  | *TIMEOUT*  | *TIMEOUT* *  |        57.78s        |
+| 100000  | *TIMEOUT*  |  *TIMEOUT*   |      *TIMEOUT*       |
+| 1000000 | *TIMEOUT*  |  *TIMEOUT*   |      *TIMEOUT*       |
+
+<center><b>Tabela 2</b> - Tempos de Execução para funções da Alínea 3.</center>
+
+<sup>*</sup> 61.53 segundos! Tão perto!
+
+As conclusões não são diferentes daquelas obtidas a com as funções que utilizam *Int*. Contudo, podemos dizer que o *TIMEOUT* ocorre em ordens menores para *fibListaBN* e *fibListaInfinitaBN*, o que pode ser explicado com o facto de embora *BigNumber* permitir a representação de números de maior grandeza a um computador, o seu processamento é mais demorado.
+
+Há que notar, contudo, que consoante o nosso estudo de ir aumentando a ordem multiplicando *n* por dez, a perda de um só nível quando comparada com os resultados da *Tabela 1* pode ser visto como algo positivo.
 

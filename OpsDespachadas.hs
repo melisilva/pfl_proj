@@ -31,3 +31,4 @@ fibLista = (map fib [0..] !!)
         fib 1 = 1
         fib a = fibLista (a-2) + fibLista (a-1)
 
+utilUnPad' xs = if (length xs /= 1 && head(xs) == 0) then utilUnPad'(drop 1 xs) else xs
