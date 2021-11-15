@@ -168,6 +168,8 @@ onde *initA* é a nossa janela de divisão atual, de comprimento calculado pela 
 
 Tirando isto, apenas existem os casos especiais em que a janela de divisão chegou ao fim do dividendo: quando o único algarismo do que sobra do dividendo é um *zero*, temos que concatenar um *0* ao quociente. De outra forma, continuamos a incrementar a variável *i* até encontrarmos o valor para o qual *i + 1* já não verifique a condição acima.
 
+Gostaríamos de mencionar que a nossa implementação de *divBN* também lida com números negativos e calcula os restos e quociente de forma correta - emanando os resultados de *quot* e *rem*.
+
 ## **Alínea 4**
 
 Esta alínea pedia que se efetuasse a comparação entre as funções para cálculo de números de Fibonacci feitas nas alíneas 1 e 3. Para efetuar esta comparação, servimo-nos do comando *:set +s* para efetuar a contagem dos tempos de execução. Com isto, fomos aumentando em ordem de grandeza.
