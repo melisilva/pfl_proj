@@ -132,7 +132,7 @@ As novas funções *util* são:
 
 *utilMul* lida então com a separação de operações com segundos operandos de dois ou mais algarismos, mais uma vez efetuando *reverse* dos operandos para que *processProduct* lide com uma lista onde avançar significaria andar para a esquerda numa conta manual. Tirando isso, há a função de *utilPadR* que, com a variável de *utilMul* ***i*** que serve de iterador, indica quantos 0 é preciso adicionar a uma lista.
 
-![image-20211115155058819](C:\Users\mathf\AppData\Roaming\Typora\typora-user-images\image-20211115155058819.png)
+![image-20211115155058819](7.png)
 
 Voltando ao exemplo dado com *469x32*, há que perceber que para cada linha adicionada àquela que será a operação de soma final na conta manual (no exemplo dado, esta soma é 930 + 14070), junta-se mais um 0 do que na linha anterior. Portanto, se a conta fosse *469x132*, a linha com o produto de 469 por 1 iria ter 2 zeros à direita.
 
