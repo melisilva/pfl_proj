@@ -1,6 +1,6 @@
 -- Alínea 2
 module BigNumber (BigNumber,
-                  toBN, less, equal, scanner, output, somaBN, subBN, divBN, mulBN, fromBN, safeDivBN) where
+                  less, equal, scanner, output, somaBN, subBN, divBN, mulBN, fromBN, safeDivBN) where
 
 import Data.String
 
@@ -10,14 +10,22 @@ type BigNumber = [Int]
 -- Operadores de comparação
 less :: BigNumber -> BigNumber -> Bool
 less a b
-      | length a > length b       = less a (utilPad (length a) b)
-      | length a < length b       = less (utilPad (length b) a) b
+      | a == b                    = False
+      | a == []                   = less [0] b
+      | b == []                   = less a [0]
+      | (take 1 a) == [0]         = less (tail a) b
+      | (take 1 b) == [0]         = less a (tail b)
+      | length a > length b       = False
+      | length a < length b       = True
       | (head a) == (head b)      = (<) (tail a) (tail b)
       | (head a) < (head b)       = True
       | (head a) > (head b)       = False
 
 equal :: BigNumber -> BigNumber -> Bool
 equal a b
+      | a == b                    = True
+      | (take 1 a) == [0]         = equal (tail a) b
+      | (take 1 b) == [0]         = equal a (tail b)
       | length a /= length b                                                     = False
       | not (any (==False) [ (a !! x) == (b !! x) | x<-[0..(length a - 1)]])     = True
       | otherwise                                                                = False
@@ -34,7 +42,7 @@ scanner str
       | head str == '-'            = (head treatAsPosRes: map (*(-1)) (tail treatAsPosRes))
       | otherwise                  = treatAsPosRes
  where treatAsPosRes = toBN num
-       num= read str :: Int
+       num = read str :: Int
 
 -- 2.3) Função output
 fromBN :: BigNumber -> Int
@@ -131,25 +139,28 @@ utilPositive a = if head(a)<0 then mulBN [-1] a else a
 
 getLenA :: Int -> BigNumber -> BigNumber -> Int
 getLenA i a b
-      | less (take i a) b || equal (take i a) b   = getLenA (i + 1) a b
+      | head a == 0                               = getLenA (i + 1) (tail a) b
+      | less (take i a) b                         = getLenA (i + 1) a b
       | otherwise                                 = i
 
 utilDiv :: BigNumber -> BigNumber -> BigNumber -> BigNumber
+utilDiv _ [] _ = []
+utilDiv _ _ [] = []
 utilDiv _ [0] b = [0]
 utilDiv _ a [0] = [0]
 utilDiv _ a [1] = a
 utilDiv i a b
-      | equal a b                                                                      = one
-      | last a == 0 && last b == 0                                                     = (utilDiv i (init a) (init b)) -- para simplificar contas com números grandes, por exemplo divisão por 10
-      | last a == 0 && last b == head a && length a > length b + 1                     = somaBN i [0] ++ [0]
-      | less quo initA && equal prod initA && divisorRest == [0]                       = somaBN i one ++ [0]
-      | less quo initA && equal prod initA && divisorRest /= []                        = somaBN i one ++ utilDiv one divisorRest b
-      | less quo initA && equal prod initA                                             = somaBN i one -- este é caso cheguemos ao exato que queremos
-      | less quo initA && less prod initA                                              = utilDiv (somaBN i one) a b -- este é para ir subindo o i, quando ainda não chegámos ao melhor
-      | less quo initA && not (less prod initA) && divisorRest /= []                   = i ++ utilDiv one (sub ++ divisorRest) b
-      | less quo initA && not (less prod initA) && divisorRest == [0]                  = i ++ [0]
-      | otherwise                                                                      = i
-  where initA = if (getLenA 0 a b) /= length a then take (getLenA 0 a b) a else a
+      | (take 1 initA == [0])                                                                   = [0] ++ utilDiv one (tail a) b
+      | last a == 0 && last b == head a && length a >= length b + 1                             = somaBN i [0] ++ [0]
+      | less quo initA && equal prod initA && divisorRest == [0]                                = somaBN i one ++ [0]
+      | less quo initA && equal prod initA && divisorRest /= [] && (take 1 divisorRest) == [0]  = somaBN i one ++ [0] ++ utilDiv one (tail divisorRest) b
+      | less quo initA && equal prod initA && divisorRest /= []                                 = somaBN i one ++ utilDiv one divisorRest b
+      | less quo initA && equal prod initA                                                      = somaBN i one -- este é caso cheguemos ao exato que queremos
+      | less quo initA && less prod initA                                                       = utilDiv (somaBN i one) a b -- este é para ir subindo o i, quando ainda não chegámos ao melhor
+      | less quo initA && not (less prod initA) && divisorRest /= []                            = i ++ utilDiv one (sub ++ divisorRest) b
+      | less quo initA && not (less prod initA) && divisorRest == [0]                           = i ++ [0]
+      | otherwise                                                                               = i
+  where initA = if (getLenA 1 a b) /= length a then take (getLenA 1 a b) a else a
         quo = mulBN i b
         prod = mulBN add1 b
         add1 = somaBN i one
@@ -217,6 +228,8 @@ divBN _ [] = error "EMPTY DIVISOR"
 divBN [0] _ = ([0], [0])
 divBN [1] _ = ([1], [1])
 divBN a b
+      | last a == 0 && last b == 0      = divBN (init a) (init b)
+      | equal a b                       = (one, [0])
       | (head a) < 0 && (head b) < 0    = (negative, subBN a (mulBN negative b))
       | (head a) < 0                    = (mulBN [-1] negative, mulBN [-1] resNegative)
       | (head b) < 0                    = (mulBN [-1] negative, resNegative)
