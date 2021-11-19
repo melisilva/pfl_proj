@@ -9,7 +9,7 @@ fibRec a | a > 0 = fibRec (a-2) + fibRec (a-1)
          | otherwise = error "Número negativo"
 
 fibLista :: (Integral a) => a -> a
-fibLista n = lista !! (fromIntegral n)
+fibLista n = last lista
   where lista = 0 : 1 : map foo [2..(fromIntegral n)]
         foo n = lista !! (n-1) + lista !! (n-2)
 

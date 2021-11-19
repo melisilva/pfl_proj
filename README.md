@@ -54,6 +54,10 @@ Apresentamos aqui alguns casos de teste para todas as funções pedidas (não in
 
 <center><b>Imagem 10</b> - Casos de Teste para funções de <i>Fibonacci</i> com <i>Integer</i>.</center>
 
+![image-20211119194132741](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211119194132741.png)
+
+<center><b>Imagem 11</b> - Casos de Teste para função <i>safeDivBN</i>.</center>
+
 ## Funcionamento
 
 ### **Alínea 1**
@@ -64,7 +68,7 @@ Esta função calcula o número de Fibonacci de ordem *n* através de uma defini
 
 #### FibLista
 
-Esta função utiliza uma lista para o cálculo do número de Fibonacci de ordem *n*. O número de ordem *n* é obtido indexando a lista mencionada.
+Esta função utiliza uma lista para o cálculo do número de Fibonacci de ordem *n*, que limita o número de elementos calculados. Retorna-se o último elemento da lista para dar o número pedido.
 
 #### FibListaInfinita
 
@@ -118,7 +122,7 @@ Esta função segue a mesma lógica da sua correspondente na alínea 1, contudo,
 
 #### safeDivBN
 
-Esta função implementa uma divisão segura por [0], impedindo quaisquer cálculos se o divisor for este. De outra forma, chama a função ***divBN*** para efetuar a divisão.
+Esta função implementa uma divisão segura por [0], impedindo quaisquer cálculos se o divisor for este. De outra forma, chama a função ***divBN*** para efetuar a divisão. Serve-se do *Monad* *Maybe*, tal como é pedido.
 
 ## Implementação das Operações Aritméticas para *BigNumber*
 

@@ -1,6 +1,6 @@
 -- Alínea 2
 module BigNumber (BigNumber,
-                  toBN, less, equal, scanner, output, somaBN, subBN, divBN, mulBN, fromBN) where
+                  toBN, less, equal, scanner, output, somaBN, subBN, divBN, mulBN, fromBN, safeDivBN) where
 
 import Data.String
 
