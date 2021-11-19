@@ -8,6 +8,58 @@ Melissa Silva (up201905076)
 
 ## **Casos de Teste**
 
+Apresentamos aqui alguns casos de teste para todas as funções pedidas (não incluímos funções auxiliares).
+
+![image-20211119184937869](C:\Users\mathf\AppData\Roaming\Typora\typora-user-images\image-20211119184937869.png)
+
+<center><b>Imagem 1</b> - Casos de Teste para <i>fibRec</i>.</center>
+
+![image-20211119185100817](C:\Users\mathf\AppData\Roaming\Typora\typora-user-images\image-20211119185100817.png)
+
+<center><b>Imagem 2</b> - Casos de Teste para <i>fibLista</i>.</center>
+
+![image-20211119185322181](C:\Users\mathf\AppData\Roaming\Typora\typora-user-images\image-20211119185322181.png)
+
+<center><b>Imagem 3</b> - Casos de Teste para <i>fibListaInfinita</i>.</center>
+
+![image-20211119185456253](C:\Users\mathf\AppData\Roaming\Typora\typora-user-images\image-20211119185456253.png)
+
+<center><b>Imagem 4</b> - Casos de Teste para <i>fibRecBN</i>.</center>
+
+![image-20211119185617430](C:\Users\mathf\AppData\Roaming\Typora\typora-user-images\image-20211119185617430.png)
+
+<center><b>Imagem 5</b> - Casos de Teste para <i>fibListaBN</i>.</center>
+
+![image-20211119185758710](C:\Users\mathf\AppData\Roaming\Typora\typora-user-images\image-20211119185758710.png)
+
+<center><b>Imagem 6</b> - Casos de Teste para <i>fibListaInfinitaBN</i>.</center>
+
+![image-20211119185948686](C:\Users\mathf\AppData\Roaming\Typora\typora-user-images\image-20211119185948686.png)
+
+<center><b>Imagem 7</b> - Casos de Teste para <i>scanner</i> e <i>output</i>.</center>
+
+![image-20211119190303302](C:\Users\mathf\AppData\Roaming\Typora\typora-user-images\image-20211119190303302.png)
+
+<center><b>Imagem 7</b> - Casos de Teste para <i>somaBN</i> e <i>subBN</i>.</center>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Funcionamento
 
 ### **Alínea 1**
@@ -18,7 +70,7 @@ Esta função calcula o número de Fibonacci de ordem *n* através de uma defini
 
 #### FibLista
 
-Esta função utiliza uma lista para o cálculo do número de Fibonacci de ordem *n*, aproveitando-se de *lazy evaluation*. O número de ordem *n* é obtido indexando a lista mencionada.
+Esta função utiliza uma lista para o cálculo do número de Fibonacci de ordem *n*. O número de ordem *n* é obtido indexando a lista mencionada.
 
 #### FibListaInfinita
 
@@ -62,7 +114,7 @@ Esta função segue a mesma lógica da sua correspondente na alínea 1, contudo,
 
 #### FibListaBN
 
-Esta função segue a mesma lógica da sua correspondente na alínea 1, contudo, retorna o resultado obtido num valor *BigNumber*.
+Esta função segue a premissa por detrás da sua correspondente na alínea 1, contudo, utiliza recursão como meio de efetuar iteração e, assim, calcular apenas tantos elementos quantos necessários. A recursão utiliza nomes 
 
 #### FibListaInfinitaBN
 
@@ -152,7 +204,7 @@ A função de divisão para *BigNumber* é a única que não usa *zipWith* de to
 
 ![5](5.png)
 
-Com janela de divisão, referimo-nos à parte do dividendo de menor comprimento possível que é maior que o divisor, por exemplo, a primeira janela de divisão de *1234 / 13* não pode ser *1* nem *12*, apenas *123*, pois só 123 > 13. Daqui, é efetuada a divisão entre a primeira janela e o divisor, que nos dá um primeiro resultado que será concatenado àqueles que se lhe seguirem, com a janela de divisão a mudar.
+Com *janela de divisão*, referimo-nos à parte do dividendo de menor comprimento possível que é maior que o divisor, por exemplo, a primeira janela de divisão de *1234 / 13* não pode ser *1* nem *12*, apenas *123*, pois só 123 > 13. Daqui, é efetuada a divisão entre a primeira janela e o divisor, que nos dá um primeiro resultado que será concatenado àqueles que se lhe seguirem, com a janela de divisão a mudar.
 
 A próxima janela de divisão é igual à concatenação do resultado da subtração entre a janela de divisão anterior (123) e o produto entre o quociente e o divisor (*9*13 = 117*) com o que quer que sobre do dividendo após selecionar a janela de divisão anterior. Após a primeira janela, apenas resta 6, logo a divisão passa a ser *64 / 13*. Se não houver mais algarismos do dividendo a concatenar, obtivemos o resto da divisão, que, no caso dado, é *12*.
 
@@ -182,7 +234,7 @@ Para que os resultados fossem viáveis, todas as contagens de tempo foram obtida
 |   10    |   0.00s   |   0.00s    |       0.00s        |
 |   100   | *TIMEOUT* |   0.00s    |       0.01s        |
 |  1000   | *TIMEOUT* |   0.02s    |       0.01s        |
-|  10000  | *TIMEOUT* |   0.60s    |       0.07s        |
+|  10000  | *TIMEOUT* |   0.67s    |       0.07s        |
 | 100000  | *TIMEOUT* | *TIMEOUT*  |       1.22s        |
 | 1000000 | *TIMEOUT* | *TIMEOUT*  |    *TIMEOUT* *     |
 
@@ -190,25 +242,42 @@ Para que os resultados fossem viáveis, todas as contagens de tempo foram obtida
 
 <sup>*</sup> Por curiosidade, deixámos este correr até ao fim. Demorou 55.67s.
 
-Logo, só com os primeiros resultados, podemos ver que *fibListaInfinita* é a mais eficiente e eficaz implementação do cálculo de números de Fibonacci, por ser a mais rápida quando a ordem de *n* é maior e também por ser a que, nas condições utilizadas, é a que sofre *TIMEOUT* em último lugar.
+| ***n*** | *fibRecInteger* | *fibListaInteger* | *fibListaInfinitaInteger* |
+| :-----: | :-------------: | :---------------: | :-----------------------: |
+|    1    |      0.00s      |       0.00s       |           0.00s           |
+|   10    |      0.00s      |       0.00s       |           0.00s           |
+|   100   |    *TIMEOUT*    |       0.01s       |           0.01s           |
+|  1000   |    *TIMEOUT*    |       0.34s       |           0.33s           |
+|  10000  |    *TIMEOUT*    |     *TIMEOUT*     |           0.08s           |
+| 100000  |    *TIMEOUT*    |     *TIMEOUT*     |           1.44s           |
+| 1000000 |    *TIMEOUT*    |     *TIMEOUT*     |  *TIMEOUT* <sup>*</sup>   |
+
+<center><b>Tabela 2</b> - Tempos de Execução para funções com <i>Integer</i>.</center>
+
+<sup>*</sup> 313.81 segundos. 
+
+Logo, só com estes resultados, podemos ver que as implementações com lista infinita são as mais eficientes e eficazes implementações do cálculo de números de Fibonacci, por ser a mais rápida quando a ordem de *n* é maior e também por ser a que, nas condições utilizadas, é a que sofre *TIMEOUT* em último lugar.
+
+Como esperado - visto que, com pesquisa, descobrimo que a implementação fornecida pelo *Prelude* para *Integer* não é tão rápida quanto o uso de valores *Int* -, podemos ver um pequeno acréscimo de diferença nos tempos de execução para a **Tabela 2** quando comparados com os da **Tabela 1**.
 
 Façamos o mesmo para as funções com *BigNumber*. A única alteração que faremos é que esperaremos não por 30 segundos até declarar um *TIMEOUT*, mas sim o dobro do tempo.
 
-| ***n*** | *fibRecBN* | *fibListaBN* | *fibListaInfinitaBN* |
-| :-----: | :--------: | :----------: | :------------------: |
-|    1    |   0.00s    |    0.00s     |        0.00s         |
-|   10    |   0.00s    |    0.00s     |        0.00s         |
-|   100   | *TIMEOUT*  |    0.01s     |        0.01s         |
-|  1000   | *TIMEOUT*  |    0.32s     |        0.33s         |
-|  10000  | *TIMEOUT*  | *TIMEOUT* *  |        57.78s        |
-| 100000  | *TIMEOUT*  |  *TIMEOUT*   |      *TIMEOUT*       |
-| 1000000 | *TIMEOUT*  |  *TIMEOUT*   |      *TIMEOUT*       |
+| ***n*** | *fibRecInteger* | *fibListaInteger* | *fibListaInfinitaInteger* |
+| :-----: | :-------------: | :---------------: | :-----------------------: |
+|    1    |      0.00s      |       0.00s       |           0.00s           |
+|   10    |      0.00s      |       0.00s       |           0.00s           |
+|   100   |    *TIMEOUT*    |       0.00s       |           0.01s           |
+|  1000   |    *TIMEOUT*    |       0.64s       |           0.01s           |
+|  10000  |    *TIMEOUT*    |    *TIMEOUT* *    |           0.08s           |
+| 100000  |    *TIMEOUT*    |     *TIMEOUT*     |         *TIMEOUT*         |
+| 1000000 |    *TIMEOUT*    |     *TIMEOUT*     |         *TIMEOUT*         |
 
-<center><b>Tabela 2</b> - Tempos de Execução para funções da Alínea 3.</center>
+<center><b>Tabela 3</b> - Tempos de Execução para funções da Alínea 3.</center>
 
-<sup>*</sup> 61.53 segundos! Tão perto!
+<sup>*</sup> 84.34 segundos.
 
-As conclusões não são diferentes daquelas obtidas a com as funções que utilizam *Int*. Contudo, podemos dizer que o *TIMEOUT* ocorre em ordens menores para *fibListaBN* e *fibListaInfinitaBN*, o que pode ser explicado com o facto de embora *BigNumber* permitir a representação de números de maior grandeza a um computador, o seu processamento é mais demorado.
+As conclusões não são diferentes daquelas obtidas a com as funções que utilizam *Int*. Contudo, podemos dizer que o *TIMEOUT* ocorre em ordens menores para *fibListaBN* e *fibListaInfinitaBN*, o que pode ser explicado com o facto de embora *BigNumber* permitir a representação de números de maior grandeza, o seu processamento é mais demorado.
 
-Há que notar, contudo, que consoante o nosso estudo de ir aumentando a ordem multiplicando *n* por dez, a perda de um só nível quando comparada com os resultados da *Tabela 1* pode ser visto como algo positivo.
+Há que notar, contudo, que consoante o nosso estudo de ir aumentando a ordem multiplicando *n* por dez, a perda de um só "nível" quando comparada com os resultados da *Tabela 1* pode ser visto como algo positivo.
 
+Por fim, vejamos o mesmo com funções que lidem com *Integer*.

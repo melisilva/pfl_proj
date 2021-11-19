@@ -1,9 +1,10 @@
+-- Alínea 2
 module BigNumber (BigNumber,
-                  less, equal, scanner, output, somaBN, subBN, divBN, mulBN, fromBN) where
+                  toBN, less, equal, scanner, output, somaBN, subBN, divBN, mulBN, fromBN) where
 
 import Data.String
 
---2.1) Definição de BigNumber
+-- 2.1) Definição de BigNumber
 type BigNumber = [Int]
 
 -- Operadores de comparação
@@ -21,20 +22,21 @@ equal a b
       | not (any (==False) [ (a !! x) == (b !! x) | x<-[0..(length a - 1)]])     = True
       | otherwise                                                                = False
 
---2.2) Função scanner
+-- 2.2) Função scanner
 toBN :: Int -> BigNumber
+toBN 0 = [0]
 toBN n
-      | abs n > 10 && n < 0     = (rem n 10:toBN (quot n 10))
-      | otherwise               = [rem n 10]
+      | abs n >= 10    =  toBN (quot n 10) ++ [rem n 10]
+      | otherwise      = [rem n 10]
 
 scanner :: String -> BigNumber
 scanner str
       | head str == '-'            = (head treatAsPosRes: map (*(-1)) (tail treatAsPosRes))
       | otherwise                  = treatAsPosRes
- where treatAsPosRes = reverse (toBN num)
+ where treatAsPosRes = toBN num
        num= read str :: Int
 
---2.3) Função output
+-- 2.3) Função output
 fromBN :: BigNumber -> Int
 fromBN xs = if head(xs) < 0 then (-1)*(sum (zipWith (*) (reverse (conv xs)) (iterate (*10) 1))) else sum (zipWith (*) (reverse xs) (iterate (*10) 1))
 
@@ -47,7 +49,7 @@ strinNum xs = if length(xs) /= 1 then head(xs) ++ strinNum(drop 1 xs) else head(
 output :: BigNumber -> String
 output xs = strinNum (map show xs)
 
--- Funções úteis para as operações
+-- utils
 utilNegative :: BigNumber -> BigNumber
 utilNegative a
       | (head a) < 0                  = (head a) : [ (a !! x)*(-1) | x<-[1..len]]
@@ -134,13 +136,14 @@ getLenA i a b
 
 utilDiv :: BigNumber -> BigNumber -> BigNumber -> BigNumber
 utilDiv _ [0] b = [0]
-utilDiv _ a [0 = [0]
+utilDiv _ a [0] = [0]
 utilDiv _ a [1] = a
-utilDiv _ [0] _ = [0]
 utilDiv i a b
+      | equal a b                                                                      = one
       | last a == 0 && last b == 0                                                     = (utilDiv i (init a) (init b)) -- para simplificar contas com números grandes, por exemplo divisão por 10
       | last a == 0 && last b == head a && length a > length b + 1                     = somaBN i [0] ++ [0]
       | less quo initA && equal prod initA && divisorRest == [0]                       = somaBN i one ++ [0]
+      | less quo initA && equal prod initA && divisorRest /= []                        = somaBN i one ++ utilDiv one divisorRest b
       | less quo initA && equal prod initA                                             = somaBN i one -- este é caso cheguemos ao exato que queremos
       | less quo initA && less prod initA                                              = utilDiv (somaBN i one) a b -- este é para ir subindo o i, quando ainda não chegámos ao melhor
       | less quo initA && not (less prod initA) && divisorRest /= []                   = i ++ utilDiv one (sub ++ divisorRest) b
@@ -209,7 +212,7 @@ mulBN a b
 
 -- 2.7) divBN
 divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
-divBN [] _ = []
+divBN [] _ = ([], [])
 divBN _ [] = error "EMPTY DIVISOR"
 divBN [0] _ = ([0], [0])
 divBN [1] _ = ([1], [1])
@@ -226,5 +229,5 @@ divBN a b
 -- Alínea 5
 safeDivBN :: BigNumber -> BigNumber -> Maybe (BigNumber, BigNumber)
 safeDivBN a b
-      | b == [0]              = fail "ERROR: Division by Zero"
+      | b == [0]              = Nothing
       | otherwise             = Just (divBN a b)
