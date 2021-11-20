@@ -256,7 +256,7 @@ Para que os resultados fossem viáveis, todas as contagens de tempo foram obtida
 
 Logo, só com estes resultados, podemos ver que as implementações com lista infinita são as mais eficientes e eficazes implementações do cálculo de números de Fibonacci, por ser a mais rápida quando a ordem de *n* é maior e também por ser a que, nas condições utilizadas, é a que sofre *TIMEOUT* em último lugar.
 
-Como esperado - visto que, com pesquisa, descobrimo que a implementação fornecida pelo *Prelude* para *Integer* não é tão rápida quanto o uso de valores *Int* -, podemos ver um pequeno acréscimo de diferença nos tempos de execução para a **Tabela 2** quando comparados com os da **Tabela 1**.
+Como esperado - visto que, com pesquisa, descobrimos que a implementação fornecida pelo *Prelude* para *Integer* não é tão rápida quanto o uso de valores *Int* -, podemos ver um acréscimo nos tempos de execução para a **Tabela 2** quando comparados com os da **Tabela 1**.
 
 Façamos o mesmo para as funções com *BigNumber*. A única alteração que faremos é que esperaremos não por 30 segundos até declarar um *TIMEOUT*, mas sim o dobro do tempo.
 
@@ -276,6 +276,4 @@ Façamos o mesmo para as funções com *BigNumber*. A única alteração que far
 
 As conclusões não são diferentes daquelas obtidas a com as funções que utilizam *Int*. Contudo, podemos dizer que o *TIMEOUT* ocorre em ordens menores para *fibListaBN* e *fibListaInfinitaBN*, o que pode ser explicado com o facto de embora *BigNumber* permitir a representação de números de maior grandeza, o seu processamento é mais demorado.
 
-Há que notar, contudo, que consoante o nosso estudo de ir aumentando a ordem multiplicando *n* por dez, a perda de um só "nível" quando comparada com os resultados da *Tabela 1* pode ser visto como algo positivo.
-
-Por fim, vejamos o mesmo com funções que lidem com *Integer*.
+Há que notar, contudo, que consoante o nosso estudo de ir aumentando a ordem multiplicando *n* por dez, a perda de um só "nível" quando comparada com os resultados das tabelas anteriores pode ser visto como algo positivo.
