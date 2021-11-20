@@ -140,7 +140,7 @@ utilPositive a = if head(a)<0 then mulBN [-1] a else a
 getLenA :: Int -> BigNumber -> BigNumber -> Int
 getLenA i a b
       | head a == 0                               = getLenA (i + 1) (tail a) b
-      | less (take i a) b                         = getLenA (i + 1) a b
+      | less (take i a) b || equal (take i a) b   = getLenA (i + 1) a b
       | otherwise                                 = i
 
 utilDiv :: BigNumber -> BigNumber -> BigNumber -> BigNumber
