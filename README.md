@@ -198,25 +198,9 @@ Por fim, *processProduct* é muito semelhante a *utilSoma* e *utilSub*, mas enqu
 
 #### **divBN**
 
-A função de divisão para *BigNumber* é a única que não usa *zipWith* de todas as operações aritméticas. Ao invés disso, adotamos uma raciocínio baseado na subtração, tal como se faz com as contas manuais de divisão, com quociente e resto. Esta função cria exatamente o raciocínio desse processo manual, e, para isso, criámos uma função de comparação entre *BigNumber* *(less)*, por ser necessário para definirmos a nossa janela de divisão. Vejamos o exemplo abaixo.
+A função de divisão para *BigNumber* é a única que não usa *zipWith* de todas as operações aritméticas. Ao invés disso, adotamos um raciocínio baseado na subtração.  A função *divBN* trata, sobretudo, de interpretar sinais e potenciais casos simples da divisão: se o divisor for maior que o dividendo, o resultado será zero e o resto será o dividendo; com dividendo e divisor iguais, o quociente será 1 e o resto será 0... etc.
 
-![5](5.png)
-
-Com *janela de divisão*, referimo-nos à parte do dividendo de menor comprimento possível que é maior que o divisor, por exemplo, a primeira janela de divisão de *1234 / 13* não pode ser *1* nem *12*, apenas *123*, pois só 123 > 13. Daqui, é efetuada a divisão entre a primeira janela e o divisor, que nos dá um primeiro resultado que será concatenado àqueles que se lhe seguirem, com a janela de divisão a mudar.
-
-A próxima janela de divisão é igual à concatenação do resultado da subtração entre a janela de divisão anterior (123) e o produto entre o quociente e o divisor (*9*13 = 117*) com o que quer que sobre do dividendo após selecionar a janela de divisão anterior. Após a primeira janela, apenas resta 6, logo a divisão passa a ser *64 / 13*. Se não houver mais algarismos do dividendo a concatenar, obtivemos o resto da divisão, que, no caso dado, é *12*.
-
-Este mecanismo é seguido para *divBN*, sendo levado a cabo por *utilDiv*. 
-
-![6](6.png)
-
-*utilDiv* procura, utilizando a variável ***i*** como iterador, o maior valor para ***i*** que verifique que 
-$$
-i*b <= initA
-$$
-onde *initA* é a nossa janela de divisão atual, de comprimento calculado pela função auxiliar *getLenA*. Sempre que encontramos o maior possível ou a correspondência perfeita para ***i*** (ou seja, que reduza a janela de divisão a 0), preparamos a concatenação de ***i*** com o resultado de uma chamada recursiva a *utilDiv* que irá efetuar a próxima divisão.
-
-Tirando isto, apenas existem os casos especiais em que a janela de divisão chegou ao fim do dividendo: quando o único algarismo do que sobra do dividendo é um *zero*, temos que concatenar um *0* ao quociente. De outra forma, continuamos a incrementar a variável *i* até encontrarmos o valor para o qual *i + 1* já não verifique a condição acima.
+*utilDiv* é uma função que utiliza recursão para recriar um ciclo iterativo, onde subtrai ao dividendo o divisor até que este seja igual a zero no máximo. Serve-se, portanto, de *subBN* e de *somaBN* para ir subtraíndo o divisor ao dividendo e incrementando o quociente, respetivamente. O resto é posteriormente calculado em *divBN* com as funções *subBN* e *mulBN*.
 
 Gostaríamos de mencionar que a nossa implementação de *divBN* também lida com números negativos e calcula os restos e quociente de forma correta - emanando os resultados de *quot* e *rem*.
 
@@ -224,41 +208,38 @@ Gostaríamos de mencionar que a nossa implementação de *divBN* também lida co
 
 Esta alínea pedia que se efetuasse a comparação entre as funções para cálculo de números de Fibonacci feitas nas alíneas 1 e 3. Para efetuar esta comparação, servimo-nos do comando *:set +s* para efetuar a contagem dos tempos de execução. Com isto, fomos aumentando em ordem de grandeza.
 
-Para que os resultados fossem viáveis, todas as contagens de tempo foram obtidas a partir do mesmo computador, além de que estabelecemos que esperaríamos apenas 30 segundos no máximo à espera de um resultado. Marcámos estas ocorrências na tabela abaixo com *TIMEOUT* e, à primeira ocorrência deste, todas as ordens maiores foram marcadas igualmente.
+Para que os resultados fossem viáveis, todas as contagens de tempo foram obtidas a partir do mesmo computador, além de que estabelecemos que esperaríamos apenas até 60 segundos no máximo à espera de um resultado. Marcámos estas ocorrências na tabela abaixo com *TIMEOUT* e, à primeira ocorrência deste, todas as ordens maiores foram marcadas igualmente.
 
-| ***n*** | *fibRec*  | *fibLista* | *fibListaInfinita* |
-| :-----: | :-------: | :--------: | :----------------: |
-|    1    |   0.00s   |   0.00s    |       0.00s        |
-|   10    |   0.00s   |   0.00s    |       0.00s        |
-|   100   | *TIMEOUT* |   0.00s    |       0.01s        |
-|  1000   | *TIMEOUT* |   0.02s    |       0.01s        |
-|  10000  | *TIMEOUT* |   0.67s    |       0.07s        |
-| 100000  | *TIMEOUT* | *TIMEOUT*  |       1.22s        |
-| 1000000 | *TIMEOUT* | *TIMEOUT*  |    *TIMEOUT* *     |
+| ***n***  | *fibRec*  | *fibLista* | *fibListaInfinita* |
+| :------: | :-------: | :--------: | :----------------: |
+|    1     |   0.00s   |   0.00s    |       0.00s        |
+|    10    |   0.00s   |   0.00s    |       0.00s        |
+|   100    | *TIMEOUT* |   0.00s    |       0.01s        |
+|   1000   | *TIMEOUT* |   0.02s    |       0.01s        |
+|  10000   | *TIMEOUT* |   0.54s    |       0.09s        |
+|  100000  | *TIMEOUT* | *TIMEOUT*  |       1.33s        |
+| 1000000  | *TIMEOUT* | *TIMEOUT*  |       54.86s       |
+| 10000000 | *TIMEOUT* | *TIMEOUT*  |     *TIMEOUT*      |
 
 <center><b>Tabela 1</b> - Tempos de Execução para funções da Alínea 1.</center>
-
-<sup>*</sup> Por curiosidade, deixámos este correr até ao fim. Demorou 55.67s.
 
 | ***n*** | *fibRecInteger* | *fibListaInteger* | *fibListaInfinitaInteger* |
 | :-----: | :-------------: | :---------------: | :-----------------------: |
 |    1    |      0.00s      |       0.00s       |           0.00s           |
 |   10    |      0.00s      |       0.00s       |           0.00s           |
-|   100   |    *TIMEOUT*    |       0.01s       |           0.01s           |
-|  1000   |    *TIMEOUT*    |       0.34s       |           0.33s           |
-|  10000  |    *TIMEOUT*    |     *TIMEOUT*     |           0.08s           |
-| 100000  |    *TIMEOUT*    |     *TIMEOUT*     |           1.44s           |
-| 1000000 |    *TIMEOUT*    |     *TIMEOUT*     |  *TIMEOUT* <sup>*</sup>   |
+|   100   |    *TIMEOUT*    |       0.01s       |           0.00s           |
+|  1000   |    *TIMEOUT*    |       0.05s       |           0.01s           |
+|  10000  |    *TIMEOUT*    |       0.60s       |           0.09s           |
+| 100000  |    *TIMEOUT*    |     *TIMEOUT*     |           1.42s           |
+| 1000000 |    *TIMEOUT*    |     *TIMEOUT*     |         *TIMEOUT*         |
 
 <center><b>Tabela 2</b> - Tempos de Execução para funções com <i>Integer</i>.</center>
-
-<sup>*</sup> 313.81 segundos. 
 
 Logo, só com estes resultados, podemos ver que as implementações com lista infinita são as mais eficientes e eficazes implementações do cálculo de números de Fibonacci, por ser a mais rápida quando a ordem de *n* é maior e também por ser a que, nas condições utilizadas, é a que sofre *TIMEOUT* em último lugar.
 
 Como esperado - visto que, com pesquisa, descobrimos que a implementação fornecida pelo *Prelude* para *Integer* não é tão rápida quanto o uso de valores *Int* -, podemos ver um acréscimo nos tempos de execução para a **Tabela 2** quando comparados com os da **Tabela 1**.
 
-Façamos o mesmo para as funções com *BigNumber*. A única alteração que faremos é que esperaremos não por 30 segundos até declarar um *TIMEOUT*, mas sim o dobro do tempo.
+Façamos o mesmo para as funções com *BigNumber*.
 
 | ***n*** | *fibRecInteger* | *fibListaInteger* | *fibListaInfinitaInteger* |
 | :-----: | :-------------: | :---------------: | :-----------------------: |
@@ -272,8 +253,12 @@ Façamos o mesmo para as funções com *BigNumber*. A única alteração que far
 
 <center><b>Tabela 3</b> - Tempos de Execução para funções da Alínea 3.</center>
 
-<sup>*</sup> 84.34 segundos.
+<sup>*</sup> 84.34 segundos. Corremos por curiosidade.
 
 As conclusões não são diferentes daquelas obtidas a com as funções que utilizam *Int*. Contudo, podemos dizer que o *TIMEOUT* ocorre em ordens menores para *fibListaBN* e *fibListaInfinitaBN*, o que pode ser explicado com o facto de embora *BigNumber* permitir a representação de números de maior grandeza, o seu processamento é mais demorado.
 
 Há que notar, contudo, que consoante o nosso estudo de ir aumentando a ordem multiplicando *n* por dez, a perda de um só "nível" quando comparada com os resultados das tabelas anteriores pode ser visto como algo positivo.
+
+Põe-se então a questão: se o processamento é mais demorado, qual será a vantagem de utilizar *BigNumber* como forma de representar números? Ao contrário da representação numérica *Int*, *Integer* e *BigNumber* não possuem um limites impostos pela sua própria representação no contexto de uma computação: a uma dada ordem de grandeza, o computador perde a capacidade de lidar com números inteiros por ocorrência de *overflow* quando estes são do tipo *Int*. De facto, o intervalo de números suportados por *Int* está bem definido: [-2<sup>29</sup>, 2<sup>29</sup> - 1]. Já *Integer* e *BigNumber* só possuem limites impostos pela memória que ocupem, pelo que podemos representar números tão grandes quanto a memória de um computador suporte.
+
+Tal como podemos ver comparando as duas últimas tabelas, *BigNumber* assemelha-se a *Integer*: representamos números de ordem de grande tão grande quanto a memória do nosso computador permita, mas "pagamos o preço" em tempo de execução - quando os números são maiores, operações sobre estes serão naturalmente mais demoradas.

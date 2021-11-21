@@ -13,6 +13,10 @@ less a b
       | a == b                    = False
       | a == []                   = less [0] b
       | b == []                   = less a [0]
+      | a == [0] && head b > 0    = True
+      | a == [0] && head b < 0    = False
+      | head a > 0 && b == [0]    = False
+      | head a < 0 && b == [0]    = True
       | (take 1 a) == [0]         = less (tail a) b
       | (take 1 b) == [0]         = less a (tail b)
       | length a > length b       = False
@@ -137,36 +141,11 @@ utilMul i a b
 utilPositive :: BigNumber -> BigNumber
 utilPositive a = if head(a)<0 then mulBN [-1] a else a
 
-getLenA :: Int -> BigNumber -> BigNumber -> Int
-getLenA i a b
-      | head a == 0                               = getLenA (i + 1) (tail a) b
-      | less (take i a) b || equal (take i a) b   = getLenA (i + 1) a b
-      | otherwise                                 = i
-
-utilDiv :: BigNumber -> BigNumber -> BigNumber -> BigNumber
-utilDiv _ [] _ = []
-utilDiv _ _ [] = []
-utilDiv _ [0] b = [0]
-utilDiv _ a [0] = [0]
-utilDiv _ a [1] = a
-utilDiv i a b
-      | (take 1 initA == [0])                                                                   = [0] ++ utilDiv one (tail a) b
-      | last a == 0 && last b == head a && length a >= length b + 1                             = somaBN i [0] ++ [0]
-      | less quo initA && equal prod initA && divisorRest == [0]                                = somaBN i one ++ [0]
-      | less quo initA && equal prod initA && divisorRest /= [] && (take 1 divisorRest) == [0]  = somaBN i one ++ [0] ++ utilDiv one (tail divisorRest) b
-      | less quo initA && equal prod initA && divisorRest /= []                                 = somaBN i one ++ utilDiv one divisorRest b
-      | less quo initA && equal prod initA                                                      = somaBN i one -- este é caso cheguemos ao exato que queremos
-      | less quo initA && less prod initA                                                       = utilDiv (somaBN i one) a b -- este é para ir subindo o i, quando ainda não chegámos ao melhor
-      | less quo initA && not (less prod initA) && divisorRest /= []                            = i ++ utilDiv one (sub ++ divisorRest) b
-      | less quo initA && not (less prod initA) && divisorRest == [0]                           = i ++ [0]
-      | otherwise                                                                               = i
-  where initA = if (getLenA 1 a b) /= length a then take (getLenA 1 a b) a else a
-        quo = mulBN i b
-        prod = mulBN add1 b
-        add1 = somaBN i one
-        sub = subBN initA quo
-        divisorRest = if length initA /= length a then drop (length initA) a else []
-        one = [1]
+utilDiv :: BigNumber -> BigNumber -> BigNumber
+utilDiv a b
+      | not (less (subBN a b) [0])        = somaBN [1] (utilDiv (subBN a b) b)
+      | equal (subBN a b) [0]             = [1]
+      | otherwise                         = [0]
 
 -- 2.4 ) somaBN
 somaBN :: BigNumber -> BigNumber -> BigNumber
@@ -212,7 +191,7 @@ mulBN a [] = [0]
 mulBN a [0] = [0]
 mulBN [0] b = [0]
 mulBN a [1] = a
-mulBN [1] b = b 
+mulBN [1] b = b
 mulBN a b
       | (head a) < 0 && (head b) > 0    = utilSig (head aNbP : map (*(-1)) (tail aNbP))
       | (head a) > 0 && (head b) < 0    = utilSig (head aPbN : map (*(-1)) (tail aPbN))
@@ -222,23 +201,21 @@ mulBN a b
         aPbN = utilMul 0 a (utilNegative b)
 
 -- 2.7) divBN
-divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
 divBN [] _ = ([], [])
 divBN _ [] = error "EMPTY DIVISOR"
 divBN [0] _ = ([0], [0])
-divBN [1] _ = ([1], [1])
 divBN a b
-      | last a == 0 && last b == 0      = divBN (init a) (init b)
-      | equal a b                       = (one, [0])
+      | equal a b                       = (one, zero)
       | (head a) < 0 && (head b) < 0    = (negative, subBN a (mulBN negative b))
       | (head a) < 0                    = (mulBN [-1] negative, mulBN [-1] resNegative)
       | (head b) < 0                    = (mulBN [-1] negative, resNegative)
-      | less a b                        = ([0], [0])
+      | less a b                        = (zero, a)
       | otherwise                       = (pos, subBN a (mulBN pos b))
-  where negative = utilDiv one (utilPositive a) (utilPositive b)
+  where negative = utilDiv (utilPositive a) (utilPositive b)
         resNegative = subBN (utilPositive a) (mulBN (utilPositive b) negative)
-        pos = utilDiv one a b
+        pos = utilDiv a b
         one = [1]
+        zero = [0]
 
 -- Alínea 5
 safeDivBN :: BigNumber -> BigNumber -> Maybe (BigNumber, BigNumber)
