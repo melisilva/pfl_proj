@@ -202,7 +202,7 @@ Por fim, *processProduct* é muito semelhante a *utilSoma* e *utilSub*, mas enqu
 
 #### **divBN**
 
-A função de divisão para *BigNumber* é a única que não usa *zipWith* de todas as operações aritméticas. Ao invés disso, adotamos uma raciocínio baseado na subtração, tal como se faz com as contas manuais de divisão, com quociente e resto. Esta função cria exatamente o raciocínio desse processo manual, e, para isso, criámos uma função de comparação entre *BigNumber* *(less)*, por ser necessário para definirmos a nossa janela de divisão. Vejamos o exemplo abaixo.
+A função de divisão para *BigNumber* é a única que não usa *zipWith* de todas as operações aritméticas. Ao invés disso, adotamos um raciocínio baseado na subtração, tal como se faz com as contas manuais de divisão, com quociente e resto. A lóggica desta função assemelha-se ao raciocínio desse processo manual, e, para isso, criámos duas funções de comparação entre *BigNumber* (*less* para <, *equal* para ==), por ser necessário para definirmos a nossa janela de divisão. Vejamos o exemplo abaixo.
 
 [![5](https://github.com/melisilva/pfl_proj/raw/23e63598b1e0b06dd41c2b58ffd9918cd2605f2c/5.png)](https://github.com/melisilva/pfl_proj/blob/23e63598b1e0b06dd41c2b58ffd9918cd2605f2c/5.png)
 
