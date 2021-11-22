@@ -46,7 +46,11 @@ Apresentamos aqui alguns casos de teste para todas as funções pedidas (não in
 
 <center><b>Imagem 8</b> - Casos de Teste para <i>mulBN</i>.</center>
 
-![image-20211119193213723](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211119193213723.png)
+![image-20211122153028932](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211122153028932.png)
+
+![image-20211122153601322](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211122153601322.png)
+
+![image-20211122153749781](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211122153749781.png)
 
 <center><b>Imagem 9</b> - Casos de Teste para <i>divBN</i>.</center>
 
@@ -198,9 +202,47 @@ Por fim, *processProduct* é muito semelhante a *utilSoma* e *utilSub*, mas enqu
 
 #### **divBN**
 
-A função de divisão para *BigNumber* é a única que não usa *zipWith* de todas as operações aritméticas. Ao invés disso, adotamos um raciocínio baseado na subtração.  A função *divBN* trata, sobretudo, de interpretar sinais e potenciais casos simples da divisão: se o divisor for maior que o dividendo, o resultado será zero e o resto será o dividendo; com dividendo e divisor iguais, o quociente será 1 e o resto será 0... etc.
+A função de divisão para *BigNumber* é a única que não usa *zipWith* de todas as operações aritméticas. Ao invés disso, adotamos uma raciocínio baseado na subtração, tal como se faz com as contas manuais de divisão, com quociente e resto. Esta função cria exatamente o raciocínio desse processo manual, e, para isso, criámos uma função de comparação entre *BigNumber* *(less)*, por ser necessário para definirmos a nossa janela de divisão. Vejamos o exemplo abaixo.
 
-*utilDiv* é uma função que utiliza recursão para recriar um ciclo iterativo, onde subtrai ao dividendo o divisor até que este seja igual a zero no máximo. Serve-se, portanto, de *subBN* e de *somaBN* para ir subtraíndo o divisor ao dividendo e incrementando o quociente, respetivamente. O resto é posteriormente calculado em *divBN* com as funções *subBN* e *mulBN*.
+[![5](https://github.com/melisilva/pfl_proj/raw/23e63598b1e0b06dd41c2b58ffd9918cd2605f2c/5.png)](https://github.com/melisilva/pfl_proj/blob/23e63598b1e0b06dd41c2b58ffd9918cd2605f2c/5.png)
+
+![5](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\5-16375958318795.png)
+
+Com *janela de divisão*, referimo-nos à parte do dividendo de menor comprimento possível que é maior que o divisor, por exemplo, a primeira janela de divisão de *1234 / 13* não pode ser *1* nem *12*, apenas *123*, pois só 123 > 13. Daqui, é efetuada a divisão entre a primeira janela e o divisor, que nos dá um primeiro resultado que será concatenado àqueles que se lhe seguirem, com a janela de divisão a mudar.
+
+A próxima janela de divisão é igual à concatenação do resultado da subtração entre a janela de divisão anterior (123) e o produto entre o quociente e o divisor (123 - 117 = 6) com o que quer que sobre do dividendo após selecionar a janela de divisão anterior (4). Após a primeira janela, apenas resta 6, logo a divisão passa a ser *64 / 13*. Se não houver mais algarismos do dividendo a concatenar, obtivemos o resto da divisão, que, no caso dado, é *12*.
+
+Este mecanismo é seguido para *divBN*, sendo levado a cabo por *utilDiv*.
+
+*utilDiv* procura, utilizando a variável ***i*** como iterador, o maior valor para ***i*** que verifique que
+$$
+i*b <= initA
+$$
+onde *initA* é a nossa janela de divisão atual, de comprimento calculado pela função auxiliar *getLenA*. Sempre que encontramos o maior possível ou a correspondência perfeita para ***i*** (ou seja, que reduza a janela de divisão a 0), preparamos a concatenação de ***i*** com o resultado de uma chamada recursiva a *utilDiv* que irá efetuar a próxima divisão. Isto é feito estudando quer o produto de *i* por *b*, quer o produto de *i + 1* por b, o que diminui o número de chamadas recursivas à função.
+
+Estes são os casos abrangidos por *utilDiv*:
+
+- quando 
+  $$
+  b * 10 = a
+  $$
+  aplicar a lógica da divisão manual torna-se mais complicado - simplificamos isto retornando, imediatamente, o quociente [1, 0] - este é um caso base;
+
+- quando é possível simplificar os operandos **dividindo-os por 10**/**tirando-lhes um zero do final**, tal é feito numa chamada recursiva à própria *utilDiv*;
+
+- se *a < b*, o primeiro algarismo de *a* for 0 e o comprimento de *a* for 1, retornamos lista vazia, pois não há mais nada a adicionar ao quociente - este é outro caso base;
+
+- se a subtração entre a janela de divisão e um produto de um potencial quociente (**(i + 1)*b** ou **i * b**) e do divisor der zero, apenas há concatenações ao quociente e não à próxima janela de divisão:
+
+  - quando o primeiro algarismo do resto do dividendo (*divRest*, em *utilDiv*) for 0 e for diferente de zero ([0]), teremos de concatenar dois zeros ao quociente esperado - isto porque <u>a janela de divisão tem de ser maior que o divisor</u>;
+  - quando o resto do dividendo for [0], adicionamos ao quociente um só 0 e a divisão termina - outro caso base;
+
+- se a subtração entre a janela de divisão e **(i + 1)*b** der maior que a janela de divisão) e o resto do dividendo não for vazio:
+
+  - se a subtração entre a janela de divisão e **i*b** não der zero, temos de concatenar o resultado dessa subtração ao resto do dividendo, formando a nossa nova janela de divisão que é passada numa chamada recursiva a *utilDiv*;
+  - se a subtração entre a janela de divisão e **i*b** der zero, então o quociente será *i* concatenado ao resultado da chamada recursiva com o resto do dividendo no lugar do segundo argumento de *utilDiv* (a);
+
+- Em qualquer outro caso, temos o último caso base, que retorna *i* como o quociente.
 
 Gostaríamos de mencionar que a nossa implementação de *divBN* também lida com números negativos e calcula os restos e quociente de forma correta - emanando os resultados de *quot* e *rem*.
 

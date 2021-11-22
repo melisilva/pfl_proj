@@ -1,6 +1,6 @@
 -- Alínea 2
 module BigNumber (BigNumber,
-                  less, equal, scanner, output, somaBN, subBN, divBN, mulBN, fromBN, safeDivBN) where
+                  less, equal, scanner, output, somaBN, subBN, divBN, mulBN, fromBN, safeDivBN, getLenA) where
 
 import Data.String
 
@@ -141,11 +141,42 @@ utilMul i a b
 utilPositive :: BigNumber -> BigNumber
 utilPositive a = if head(a)<0 then mulBN [-1] a else a
 
-utilDiv :: BigNumber -> BigNumber -> BigNumber
-utilDiv a b
-      | not (less (subBN a b) [0])        = somaBN [1] (utilDiv (subBN a b) b)
-      | equal (subBN a b) [0]             = [1]
-      | otherwise                         = [0]
+getLenA :: Int -> BigNumber -> BigNumber -> Int
+getLenA i a b
+      | less a b                                  = 0
+      | length a == length b                      = length a
+      | head a == 0                               = 1 + getLenA 1 (tail a) b
+      | less (take i a) b                         = getLenA (i + 1) a b
+      | otherwise                                 = i
+
+utilDiv :: BigNumber -> BigNumber -> BigNumber -> BigNumber
+utilDiv _ [] _ = []
+utilDiv _ _ [] = []
+utilDiv _ [0] b = [0]
+utilDiv _ a [0] = [0]
+utilDiv _ a [1] = a
+utilDiv i a b
+      | mulBN b ten == a                                                                          = ten
+      | (drop (length a - 1) a) == zero && (drop (length b - 1) b) == zero                        = (utilDiv zero (take (length a - 1) a) (take (length b - 1) b))
+      | less a b && take 1 a == zero && length a == 1                                             = []
+      | take 1 a == zero                                                                          = zero ++ utilDiv zero (drop 1 initA) b
+      | less quo initA && less prod initA && not (equal prod initA)                               = utilDiv (somaBN i one) a b
+      | less quo initA && equal prod initA && divRest == []                                   = somaBN i one
+      | less quo initA && equal prod initA && (take 1 divRest) == zero && divRest /= zero = somaBN i one ++ zero ++ utilDiv zero (divRest) b
+      | less quo initA && equal prod initA && (take 1 divRest) == zero && divRest == zero = somaBN i one ++ zero ++ utilDiv zero (divRest) b
+      | less quo initA && equal prod initA && divRest /= []                                   = somaBN i one ++ utilDiv zero (divRest) b
+      | less quo initA && not (less prod initA) && divRest /= [] && sub /= zero               = i ++ utilDiv zero (sub ++ divRest) b
+      | less quo initA && not (less prod initA) && divRest /= [] && sub == zero               = i ++ utilDiv zero divRest b
+      | otherwise                                                                                 = i
+  where initA = if (getLenA 1 a b) /= length a then take (getLenA 1 a b) a else a
+        quo = mulBN i b
+        prod = mulBN add1 b
+        add1 = somaBN i one
+        sub = subBN initA quo
+        divRest = if length initA /= length a then drop (length initA) a else []
+        one = [1]
+        zero = [0]
+        ten = one ++ zero
 
 -- 2.4 ) somaBN
 somaBN :: BigNumber -> BigNumber -> BigNumber
@@ -201,6 +232,7 @@ mulBN a b
         aPbN = utilMul 0 a (utilNegative b)
 
 -- 2.7) divBN
+divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
 divBN [] _ = ([], [])
 divBN _ [] = error "EMPTY DIVISOR"
 divBN [0] _ = ([0], [0])
@@ -211,9 +243,9 @@ divBN a b
       | (head b) < 0                    = (mulBN [-1] negative, resNegative)
       | less a b                        = (zero, a)
       | otherwise                       = (pos, subBN a (mulBN pos b))
-  where negative = utilDiv (utilPositive a) (utilPositive b)
+  where negative = utilDiv zero (utilPositive a) (utilPositive b)
         resNegative = subBN (utilPositive a) (mulBN (utilPositive b) negative)
-        pos = utilDiv a b
+        pos = utilDiv zero a b
         one = [1]
         zero = [0]
 
