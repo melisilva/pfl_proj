@@ -2,6 +2,7 @@ import BigNumber
 import GHC.Num
 
 -- Alínea 1
+-- Todas as seguintes funções desta alínea usam Int.
 -- Utiliza recursão direta para o cálculo de números de Fibonacci: fibRec(n) = fibRec(n-1) + fibRec(n - 2).
 fibRec :: (Integral a) => a -> a
 fibRec 0 = 0
@@ -16,7 +17,6 @@ fibLista :: (Integral a) => a -> a
 fibLista n = last lista
   where lista = 0 : 1 : map foo [2..(fromIntegral n)]
         foo n = lista !! (n-1) + lista !! (n-2)
-
 
 -- Utiliza uma lista infinita para o cálculo de números de Fibonacci.
 -- Usa-se indexação para se obter a ordem pretendida e zipWith para as somas.
@@ -58,6 +58,8 @@ fibListaInfinitaBN n = head (drop (fromBN n) lista)
 -- Estas funções só foram elaboradas no contexto da Alínea 4
 -- Seguem a mesma lógica das funções da alínea 1, apenas foi mudado o tipo,
 -- tendo-se em conta alterações necessárias através de fromIntegral.
+
+-- Funções de tipo Integer (usam fromIntegral devido a como foram escritas).
 fibRecInteger :: Integer -> Integer
 fibRecInteger 0 = 0
 fibRecInteger 1 = 1
@@ -71,4 +73,20 @@ fibListaInteger n = lista !! (fromIntegral n)
 
 fibListaInfinitaInteger :: Integer -> Integer
 fibListaInfinitaInteger a = lista !! (fromIntegral a)
+  where lista = 0 : 1 : zipWith (+) lista (drop 1 lista)
+
+-- Funções de tipo Int.
+fibRecInt :: Int -> Int
+fibRecInt 0 = 0
+fibRecInt 1 = 1
+fibRecInt a | a > 0 = fibRec (a-2) + fibRec (a-1)
+         | otherwise = error "Número negativo"
+
+fibListaInt :: Int -> Int
+fibListaInt n = last lista
+  where lista = 0 : 1 : map foo [2..n]
+        foo n = lista !! (n-1) + lista !! (n-2)
+
+fibListaInfinitaInt :: Int -> Int
+fibListaInfinitaInt a = lista !! a
   where lista = 0 : 1 : zipWith (+) lista (drop 1 lista)

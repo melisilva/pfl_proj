@@ -204,8 +204,6 @@ Por fim, *processProduct* é muito semelhante a *utilSoma* e *utilSub*, mas enqu
 
 A função de divisão para *BigNumber* é a única que não usa *zipWith* de todas as operações aritméticas. Ao invés disso, adotamos um raciocínio baseado na subtração, tal como se faz com as contas manuais de divisão, com quociente e resto. A lóggica desta função assemelha-se ao raciocínio desse processo manual, e, para isso, criámos duas funções de comparação entre *BigNumber* (*less* para <, *equal* para ==), por ser necessário para definirmos a nossa janela de divisão. Vejamos o exemplo abaixo.
 
-[![5](https://github.com/melisilva/pfl_proj/raw/23e63598b1e0b06dd41c2b58ffd9918cd2605f2c/5.png)](https://github.com/melisilva/pfl_proj/blob/23e63598b1e0b06dd41c2b58ffd9918cd2605f2c/5.png)
-
 ![5](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\5-16375958318795.png)
 
 Com *janela de divisão*, referimo-nos à parte do dividendo de menor comprimento possível que é maior que o divisor, por exemplo, a primeira janela de divisão de *1234 / 13* não pode ser *1* nem *12*, apenas *123*, pois só 123 > 13. Daqui, é efetuada a divisão entre a primeira janela e o divisor, que nos dá um primeiro resultado que será concatenado àqueles que se lhe seguirem, com a janela de divisão a mudar.
@@ -252,18 +250,18 @@ Esta alínea pedia que se efetuasse a comparação entre as funções para cálc
 
 Para que os resultados fossem viáveis, todas as contagens de tempo foram obtidas a partir do mesmo computador, além de que estabelecemos que esperaríamos apenas até 60 segundos no máximo à espera de um resultado. Marcámos estas ocorrências na tabela abaixo com *TIMEOUT* e, à primeira ocorrência deste, todas as ordens maiores foram marcadas igualmente.
 
-| ***n***  | *fibRec*  | *fibLista* | *fibListaInfinita* |
-| :------: | :-------: | :--------: | :----------------: |
-|    1     |   0.00s   |   0.00s    |       0.00s        |
-|    10    |   0.00s   |   0.00s    |       0.00s        |
-|   100    | *TIMEOUT* |   0.00s    |       0.01s        |
-|   1000   | *TIMEOUT* |   0.02s    |       0.01s        |
-|  10000   | *TIMEOUT* |   0.54s    |       0.09s        |
-|  100000  | *TIMEOUT* | *TIMEOUT*  |       1.33s        |
-| 1000000  | *TIMEOUT* | *TIMEOUT*  |       54.86s       |
-| 10000000 | *TIMEOUT* | *TIMEOUT*  |     *TIMEOUT*      |
+| ***n***  | *fibRecInt* | *fibListaInt* | *fibListaInfinitaInt* |
+| :------: | :---------: | :-----------: | :-------------------: |
+|    1     |    0.00s    |     0.00s     |         0.00s         |
+|    10    |    0.00s    |     0.00s     |         0.00s         |
+|   100    |  *TIMEOUT*  |     0.00s     |         0.01s         |
+|   1000   |  *TIMEOUT*  |     0.02s     |         0.01s         |
+|  10000   |  *TIMEOUT*  |     0.54s     |         0.09s         |
+|  100000  |  *TIMEOUT*  |   *TIMEOUT*   |         1.33s         |
+| 1000000  |  *TIMEOUT*  |   *TIMEOUT*   |        54.86s         |
+| 10000000 |  *TIMEOUT*  |   *TIMEOUT*   |       *TIMEOUT*       |
 
-<center><b>Tabela 1</b> - Tempos de Execução para funções da Alínea 1.</center>
+<center><b>Tabela 1</b> - Tempos de Execução para funções da Alínea 4 (<i>Int</i>)</center>
 
 | ***n*** | *fibRecInteger* | *fibListaInteger* | *fibListaInfinitaInteger* |
 | :-----: | :-------------: | :---------------: | :-----------------------: |
@@ -275,7 +273,7 @@ Para que os resultados fossem viáveis, todas as contagens de tempo foram obtida
 | 100000  |    *TIMEOUT*    |     *TIMEOUT*     |           1.42s           |
 | 1000000 |    *TIMEOUT*    |     *TIMEOUT*     |         *TIMEOUT*         |
 
-<center><b>Tabela 2</b> - Tempos de Execução para funções com <i>Integer</i>.</center>
+<center><b>Tabela 2</b> - Tempos de Execução para funções da Alínea 4 com <i>Integer</i>.</center>
 
 Logo, só com estes resultados, podemos ver que as implementações com lista infinita são as mais eficientes e eficazes implementações do cálculo de números de Fibonacci, por ser a mais rápida quando a ordem de *n* é maior e também por ser a que, nas condições utilizadas, é a que sofre *TIMEOUT* em último lugar.
 
@@ -283,15 +281,15 @@ Como esperado - visto que, com pesquisa, descobrimos que a implementação forne
 
 Façamos o mesmo para as funções com *BigNumber*.
 
-| ***n*** | *fibRecInteger* | *fibListaInteger* | *fibListaInfinitaInteger* |
-| :-----: | :-------------: | :---------------: | :-----------------------: |
-|    1    |      0.00s      |       0.00s       |           0.00s           |
-|   10    |      0.00s      |       0.00s       |           0.00s           |
-|   100   |    *TIMEOUT*    |       0.00s       |           0.01s           |
-|  1000   |    *TIMEOUT*    |       0.64s       |           0.01s           |
-|  10000  |    *TIMEOUT*    |    *TIMEOUT* *    |           0.08s           |
-| 100000  |    *TIMEOUT*    |     *TIMEOUT*     |         *TIMEOUT*         |
-| 1000000 |    *TIMEOUT*    |     *TIMEOUT*     |         *TIMEOUT*         |
+| ***n*** | *fibRecBN* | *fibListaBN* | *fibListaInfinitaIntegerBN* |
+| :-----: | :--------: | :----------: | :-------------------------: |
+|    1    |   0.00s    |    0.00s     |            0.00s            |
+|   10    |   0.00s    |    0.00s     |            0.00s            |
+|   100   | *TIMEOUT*  |    0.00s     |            0.01s            |
+|  1000   | *TIMEOUT*  |    0.64s     |            0.01s            |
+|  10000  | *TIMEOUT*  | *TIMEOUT* *  |            0.08s            |
+| 100000  | *TIMEOUT*  |  *TIMEOUT*   |          *TIMEOUT*          |
+| 1000000 | *TIMEOUT*  |  *TIMEOUT*   |          *TIMEOUT*          |
 
 <center><b>Tabela 3</b> - Tempos de Execução para funções da Alínea 3.</center>
 
