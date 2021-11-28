@@ -58,9 +58,13 @@ Apresentamos aqui alguns casos de teste para todas as funções pedidas (não in
 
 <center><b>Imagem 10</b> - Casos de Teste para funções de <i>Fibonacci</i> com <i>Integer</i>.</center>
 
+
+
+<center><b>Imagem 11</b> - Casos de Teste para funções de <i>Fibonacci</i> com <i>Int</i>.</center>
+
 ![image-20211119194132741](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211119194132741.png)
 
-<center><b>Imagem 11</b> - Casos de Teste para função <i>safeDivBN</i>.</center>
+<center><b>Imagem 12</b> - Casos de Teste para função <i>safeDivBN</i>.</center>
 
 ## Funcionamento
 
