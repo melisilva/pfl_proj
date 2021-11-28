@@ -250,16 +250,18 @@ Esta alínea pedia que se efetuasse a comparação entre as funções para cálc
 
 Para que os resultados fossem viáveis, todas as contagens de tempo foram obtidas a partir do mesmo computador, além de que estabelecemos que esperaríamos apenas até 60 segundos no máximo à espera de um resultado. Marcámos estas ocorrências na tabela abaixo com *TIMEOUT* e, à primeira ocorrência deste, todas as ordens maiores foram marcadas igualmente.
 
-| ***n***  | *fibRecInt* | *fibListaInt* | *fibListaInfinitaInt* |
-| :------: | :---------: | :-----------: | :-------------------: |
-|    1     |    0.00s    |     0.00s     |         0.00s         |
-|    10    |    0.00s    |     0.00s     |         0.00s         |
-|   100    |  *TIMEOUT*  |     0.00s     |         0.01s         |
-|   1000   |  *TIMEOUT*  |     0.02s     |         0.01s         |
-|  10000   |  *TIMEOUT*  |     0.54s     |         0.09s         |
-|  100000  |  *TIMEOUT*  |   *TIMEOUT*   |         1.33s         |
-| 1000000  |  *TIMEOUT*  |   *TIMEOUT*   |        54.86s         |
-| 10000000 |  *TIMEOUT*  |   *TIMEOUT*   |       *TIMEOUT*       |
+| ***n***  | *fibRecInt*  | *fibListaInt* | *fibListaInfinitaInt* |
+| :------: | :----------: | :-----------: | :-------------------: |
+|    1     |    0.00s     |     0.00s     |         0.00s         |
+|    10    |    0.00s     |     0.00s     |         0.00s         |
+|   100    | *INVÁLIDO* * | *INVÁLIDO* *  |     *INVÁLIDO* *      |
+|   1000   |  *INVÁLIDO*  |  *INVÁLIDO*   |      *INVÁLIDO*       |
+|  10000   |  *INVÁLIDO*  |  *INVÁLIDO*   |      *INVÁLIDO*       |
+|  100000  |  *INVÁLIDO*  |  *INVÁLIDO*   |      *INVÁLIDO*       |
+| 1000000  |  *INVÁLIDO*  |  *INVÁLIDO*   |      *INVÁLIDO*       |
+| 10000000 |  *INVÁLIDO*  |  *INVÁLIDO*   |      *INVÁLIDO*       |
+
+<sup>*</sup> Ocorreu overflow. Resultado inválido. Todos os seguintes também.
 
 <center><b>Tabela 1</b> - Tempos de Execução para funções da Alínea 4 (<i>Int</i>)</center>
 
@@ -275,9 +277,9 @@ Para que os resultados fossem viáveis, todas as contagens de tempo foram obtida
 
 <center><b>Tabela 2</b> - Tempos de Execução para funções da Alínea 4 com <i>Integer</i>.</center>
 
-Logo, só com estes resultados, podemos ver que as implementações com lista infinita são as mais eficientes e eficazes implementações do cálculo de números de Fibonacci, por ser a mais rápida quando a ordem de *n* é maior e também por ser a que, nas condições utilizadas, é a que sofre *TIMEOUT* em último lugar.
+Logo, só com estes resultados, podemos ver que as implementações com lista infinita são as mais eficientes e eficazes implementações do cálculo de números de Fibonacci, por ser a mais rápida quando a ordem de *n* é maior e também por ser a que, nas condições utilizadas, é a que sofre *TIMEOUT* em último lugar. Por outro lado, descobrimos que logo a partir de *n = 100*, a representação com números *Int* sofre *overflow*, pelo que todos os resultados obtidos se tornam inválidos.
 
-Como esperado - visto que, com pesquisa, descobrimos que a implementação fornecida pelo *Prelude* para *Integer* não é tão rápida quanto o uso de valores *Int* -, podemos ver um acréscimo nos tempos de execução para a **Tabela 2** quando comparados com os da **Tabela 1**.
+As funções feitas na alínea 1 não sofrem *overflow*. Podemos então assumir que estão a lidar com *Integer* e não com *Int*.
 
 Façamos o mesmo para as funções com *BigNumber*.
 
@@ -295,10 +297,10 @@ Façamos o mesmo para as funções com *BigNumber*.
 
 <sup>*</sup> 84.34 segundos. Corremos por curiosidade.
 
-As conclusões não são diferentes daquelas obtidas a com as funções que utilizam *Int*. Contudo, podemos dizer que o *TIMEOUT* ocorre em ordens menores para *fibListaBN* e *fibListaInfinitaBN*, o que pode ser explicado com o facto de embora *BigNumber* permitir a representação de números de maior grandeza, o seu processamento é mais demorado.
+As conclusões não são diferentes daquelas obtidas a com as funções que utilizam *Integer*. Contudo, podemos dizer que o *TIMEOUT* ocorre em ordens menores para *fibListaBN* e *fibListaInfinitaBN*, o que pode ser explicado com o facto de embora *BigNumber* permitir a representação de números de maior grandeza, o seu processamento é mais demorado.
 
-Há que notar, contudo, que consoante o nosso estudo de ir aumentando a ordem multiplicando *n* por dez, a perda de um só "nível" quando comparada com os resultados das tabelas anteriores pode ser visto como algo positivo.
+Há que notar, contudo, que consoante o nosso estudo de ir aumentando a ordem multiplicando *n* por dez, a perda de um só "nível" quando comparada com os resultados da tabela anteriores pode ser visto como algo positivo.
 
-Põe-se então a questão: se o processamento é mais demorado, qual será a vantagem de utilizar *BigNumber* como forma de representar números? Ao contrário da representação numérica *Int*, *Integer* e *BigNumber* não possuem um limites impostos pela sua própria representação no contexto de uma computação: a uma dada ordem de grandeza, o computador perde a capacidade de lidar com números inteiros por ocorrência de *overflow* quando estes são do tipo *Int*. De facto, o intervalo de números suportados por *Int* está bem definido: [-2<sup>29</sup>, 2<sup>29</sup> - 1]. Já *Integer* e *BigNumber* só possuem limites impostos pela memória que ocupem, pelo que podemos representar números tão grandes quanto a memória de um computador suporte.
+Põe-se então a questão: se o processamento é mais demorado, qual será a vantagem de utilizar *BigNumber* como forma de representar números? Ao contrário da representação numérica *Int*, *Integer* e *BigNumber* não possuem um limites impostos pela sua própria representação no contexto de uma computação: a uma dada ordem de grandeza, o computador perde a capacidade de lidar com números *Int* de forma válida por ocorrência de *overflow*. De facto, o intervalo de números suportados por *Int* está bem definido: [-2<sup>29</sup>, 2<sup>29</sup> - 1] - o número de ordem *n = 100* é bem maior que o limite máximo, o que explica os resultados inválidos na **Tabela 1**. Já *Integer* e *BigNumber* só possuem limites impostos pela memória que ocupam, pelo que podemos representar números tão grandes quanto a memória de um computador suporte.
 
 Tal como podemos ver comparando as duas últimas tabelas, *BigNumber* assemelha-se a *Integer*: representamos números de ordem de grande tão grande quanto a memória do nosso computador permita, mas "pagamos o preço" em tempo de execução - quando os números são maiores, operações sobre estes serão naturalmente mais demoradas.
