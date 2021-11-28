@@ -58,7 +58,7 @@ Apresentamos aqui alguns casos de teste para todas as funções pedidas (não in
 
 <center><b>Imagem 10</b> - Casos de Teste para funções de <i>Fibonacci</i> com <i>Integer</i>.</center>
 
-![testcases](https://github.com/melisilva/pfl_proj/blob/main/testcases.png)
+![testcases](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\testcases-16380977495553.png)
 
 <center><b>Imagem 11</b> - Casos de Teste para funções de <i>Fibonacci</i> com <i>Int</i>.</center>
 
