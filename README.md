@@ -10,59 +10,59 @@ Melissa Silva (up201905076)
 
 Apresentamos aqui alguns casos de teste para todas as funções pedidas (não incluímos funções auxiliares).
 
-![image-20211119184937869](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211119184937869.png)
+![image-20211119184937869](image-20211119184937869.png)
 
 <center><b>Imagem 1</b> - Casos de Teste para <i>fibRec</i>.</center>
 
-![image-20211119185100817](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211119185100817.png)
+![image-20211119185100817](image-20211119185100817.png)
 
 <center><b>Imagem 2</b> - Casos de Teste para <i>fibLista</i>.</center>
 
-![image-20211119185322181](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211119185322181.png)
+![image-20211119185322181](image-20211119185322181.png)
 
 <center><b>Imagem 3</b> - Casos de Teste para <i>fibListaInfinita</i>.</center>
 
-![image-20211119185456253](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211119185456253.png)
+![image-20211119185456253](image-20211119185456253.png)
 
 <center><b>Imagem 4</b> - Casos de Teste para <i>fibRecBN</i>.</center>
 
-![image-20211119185617430](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211119185617430.png)
+![image-20211119185617430](image-20211119185617430.png)
 
 <center><b>Imagem 5</b> - Casos de Teste para <i>fibListaBN</i>.</center>
 
-![image-20211119185758710](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211119185758710.png)
+![image-20211119185758710](image-20211119185758710.png)
 
 <center><b>Imagem 6</b> - Casos de Teste para <i>fibListaInfinitaBN</i>.</center>
 
-![image-20211119185948686](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211119185948686.png)
+![image-20211119185948686](image-20211119185948686.png)
 
 <center><b>Imagem 7</b> - Casos de Teste para <i>scanner</i> e <i>output</i>.</center>
 
-![image-20211119190303302](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211119190303302.png)
+![image-20211119190303302](image-20211119190303302.png)
 
 <center><b>Imagem 7</b> - Casos de Teste para <i>somaBN</i> e <i>subBN</i>.</center>
 
-![image-20211119193309288](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211119193309288.png)
+![image-20211119193309288](image-20211119193309288.png)
 
 <center><b>Imagem 8</b> - Casos de Teste para <i>mulBN</i>.</center>
 
-![image-20211122153028932](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211122153028932.png)
+![image-20211122153028932](image-20211122153028932.png)
 
-![image-20211122153601322](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211122153601322.png)
+![image-20211122153601322](image-20211122153601322.png)
 
-![image-20211122153749781](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211122153749781.png)
+![image-20211122153749781](image-20211122153749781.png)
 
 <center><b>Imagem 9</b> - Casos de Teste para <i>divBN</i>.</center>
 
-![image-20211119193706552](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211119193706552.png)
+![image-20211119193706552](image-20211119193706552.png)
 
 <center><b>Imagem 10</b> - Casos de Teste para funções de <i>Fibonacci</i> com <i>Integer</i>.</center>
 
-![testcases](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\testcases-16380977495553.png)
+![testcases](testcases-16380977495553.png)
 
 <center><b>Imagem 11</b> - Casos de Teste para funções de <i>Fibonacci</i> com <i>Int</i>.</center>
 
-![image-20211119194132741](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\image-20211119194132741.png)
+![image-20211119194132741](image-20211119194132741.png)
 
 <center><b>Imagem 12</b> - Casos de Teste para função <i>safeDivBN</i>.</center>
 
@@ -208,7 +208,7 @@ Por fim, *processProduct* é muito semelhante a *utilSoma* e *utilSub*, mas enqu
 
 A função de divisão para *BigNumber* é a única que não usa *zipWith* de todas as operações aritméticas. Ao invés disso, adotamos um raciocínio baseado na subtração, tal como se faz com as contas manuais de divisão, com quociente e resto. A lóggica desta função assemelha-se ao raciocínio desse processo manual, e, para isso, criámos duas funções de comparação entre *BigNumber* (*less* para <, *equal* para ==), por ser necessário para definirmos a nossa janela de divisão. Vejamos o exemplo abaixo.
 
-![5](L:\COLLEGE\A3\SEM1\PFL\pfl_proj\5-16375958318795.png)
+![5](5-16375958318795.png)
 
 Com *janela de divisão*, referimo-nos à parte do dividendo de menor comprimento possível que é maior que o divisor, por exemplo, a primeira janela de divisão de *1234 / 13* não pode ser *1* nem *12*, apenas *123*, pois só 123 > 13. Daqui, é efetuada a divisão entre a primeira janela e o divisor, que nos dá um primeiro resultado que será concatenado àqueles que se lhe seguirem, com a janela de divisão a mudar.
 
