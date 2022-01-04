@@ -1,4 +1,5 @@
 # Projeto de PFL em Haskell
+Módulo de BigNumbers e Fibonacci.
 
 ## Autores
 
