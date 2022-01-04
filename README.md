@@ -10,51 +10,51 @@ Melissa Silva (up201905076)
 
 Apresentamos aqui alguns casos de teste para todas as funções pedidas (não incluímos funções auxiliares).
 
-![image-20211119184937869](image-20211119184937869.png)
+![image-20211119184937869](./images/image-20211119184937869.png)
 
 <center><b>Imagem 1</b> - Casos de Teste para <i>fibRec</i>.</center>
 
-![image-20211119185100817](image-20211119185100817.png)
+![image-20211119185100817](./images/image-20211119185100817.png)
 
 <center><b>Imagem 2</b> - Casos de Teste para <i>fibLista</i>.</center>
 
-![image-20211119185322181](image-20211119185322181.png)
+![image-20211119185322181](./images/image-20211119185322181.png)
 
 <center><b>Imagem 3</b> - Casos de Teste para <i>fibListaInfinita</i>.</center>
 
-![image-20211119185456253](image-20211119185456253.png)
+![image-20211119185456253](./images/image-20211119185456253.png)
 
 <center><b>Imagem 4</b> - Casos de Teste para <i>fibRecBN</i>.</center>
 
-![image-20211119185617430](image-20211119185617430.png)
+![image-20211119185617430](./images/image-20211119185617430.png)
 
 <center><b>Imagem 5</b> - Casos de Teste para <i>fibListaBN</i>.</center>
 
-![image-20211119185758710](image-20211119185758710.png)
+![image-20211119185758710](./images/image-20211119185758710.png)
 
 <center><b>Imagem 6</b> - Casos de Teste para <i>fibListaInfinitaBN</i>.</center>
 
-![image-20211119185948686](image-20211119185948686.png)
+![image-20211119185948686](./images/image-20211119185948686.png)
 
 <center><b>Imagem 7</b> - Casos de Teste para <i>scanner</i> e <i>output</i>.</center>
 
-![image-20211119190303302](image-20211119190303302.png)
+![image-20211119190303302](./images/image-20211119190303302.png)
 
 <center><b>Imagem 7</b> - Casos de Teste para <i>somaBN</i> e <i>subBN</i>.</center>
 
-![image-20211119193309288](image-20211119193309288.png)
+![image-20211119193309288](./images/image-20211119193309288.png)
 
 <center><b>Imagem 8</b> - Casos de Teste para <i>mulBN</i>.</center>
 
-![image-20211122153028932](image-20211122153028932.png)
+![image-20211122153028932](./images/image-20211122153028932.png)
 
-![image-20211122153601322](image-20211122153601322.png)
+![image-20211122153601322](./images/image-20211122153601322.png)
 
-![image-20211122153749781](image-20211122153749781.png)
+![image-20211122153749781](./images/image-20211122153749781.png)
 
 <center><b>Imagem 9</b> - Casos de Teste para <i>divBN</i>.</center>
 
-![image-20211119193706552](image-20211119193706552.png)
+![image-20211119193706552](./images/image-20211119193706552.png)
 
 <center><b>Imagem 10</b> - Casos de Teste para funções de <i>Fibonacci</i> com <i>Integer</i>.</center>
 
@@ -62,7 +62,7 @@ Apresentamos aqui alguns casos de teste para todas as funções pedidas (não in
 
 <center><b>Imagem 11</b> - Casos de Teste para funções de <i>Fibonacci</i> com <i>Int</i>.</center>
 
-![image-20211119194132741](image-20211119194132741.png)
+![image-20211119194132741](./images/image-20211119194132741.png)
 
 <center><b>Imagem 12</b> - Casos de Teste para função <i>safeDivBN</i>.</center>
 
